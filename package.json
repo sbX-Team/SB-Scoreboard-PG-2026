@@ -10,9 +10,7 @@
   "main": "app/background.js",
   "build": {
     "appId": "com.socialboothsyncv3",
-    "win": {
-      "signAndEditExecutable": false
-    },
+    "win": {},
     "files": [
       "app/**/*",
       "node_modules/**/*",
