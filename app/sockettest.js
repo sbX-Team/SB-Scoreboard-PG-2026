@@ -1,0 +1,2 @@
+(()=>{function o(o){$("#log").prepend(o+"<br />")}$(document).ready(function(){}),socket.on("connect",()=>{o("Connected to Socket Server")}),socket.on("startGame",function(e){console.log(e),o("From Server: <b>startGame</b>"),o(JSON.stringify(e))}),socket.on("updateScore",function(e){console.log(e),o("From Server: <b>updateScore</b>"),o(JSON.stringify(e))}),socket.on("gameEnd",function(e){console.log(e),o("From Server: <b>gameEnd</b>")}),socket.on("zerobat",function(e){console.log(e),o("From Server: <b>zerobat</b>")})})();
+//# sourceMappingURL=sockettest.js.map

@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BOA Scoreboard</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <style>
+    :root {
+      --sbx-black:  #211f20;
+      --sbx-grey:   #e8e8e8;
+      --sbx-white:  #ffffff;
+      --sbx-blue:   #00acd4;
+      --sbx-dark:   #181617;
+      --sbx-card:   #2c2a2b;
+    }
+
+    body {
+      background-color: var(--sbx-black);
+      color: var(--sbx-white);
+      font-family: sans-serif;
+    }
+
+    h5 {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--sbx-blue);
+      margin-bottom: 0.75rem;
+    }
+
+    .sbx-card {
+      background-color: var(--sbx-card);
+      border: 1px solid #3a3839;
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .sbx-card p {
+      margin-bottom: 0.35rem;
+      font-size: 0.875rem;
+      color: var(--sbx-grey);
+    }
+
+    .sbx-card p strong {
+      color: var(--sbx-white);
+    }
+
+    .sbx-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      margin-bottom: 0.15rem;
+    }
+
+    a {
+      color: var(--sbx-blue);
+    }
+    a:hover {
+      color: #33c4e0;
+    }
+
+    /* Buttons */
+    .btn-sbx-primary {
+      background-color: var(--sbx-blue);
+      color: var(--sbx-black);
+      border: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.4rem 1rem;
+    }
+    .btn-sbx-primary:hover {
+      background-color: #33c4e0;
+      color: var(--sbx-black);
+    }
+
+    .btn-sbx-secondary {
+      background-color: transparent;
+      color: var(--sbx-grey);
+      border: 1px solid #555;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.4rem 1rem;
+    }
+    .btn-sbx-secondary:hover {
+      border-color: var(--sbx-blue);
+      color: var(--sbx-blue);
+    }
+
+    .btn-sbx-danger {
+      background-color: transparent;
+      color: #e05555;
+      border: 1px solid #e05555;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.35rem 0.85rem;
+    }
+    .btn-sbx-danger:hover {
+      background-color: #e05555;
+      color: var(--sbx-white);
+    }
+
+    .btn-sbx-success {
+      background-color: transparent;
+      color: #4caf7d;
+      border: 1px solid #4caf7d;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.35rem 0.85rem;
+    }
+    .btn-sbx-success:hover {
+      background-color: #4caf7d;
+      color: var(--sbx-black);
+    }
+
+    /* Volume slider */
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 180px;
+      height: 4px;
+      background: #3a3839;
+      border-radius: 2px;
+      outline: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--sbx-blue);
+      cursor: pointer;
+    }
+
+    /* Log */
+    #log {
+      background-color: var(--sbx-dark);
+      border: 1px solid #3a3839;
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #aaa;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .divider {
+      border-top: 1px solid #3a3839;
+      margin: 1rem 0;
+    }
+
+    .relay-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+
+    .section-header {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .volume-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--sbx-grey);
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" style="max-width:680px; padding-top:1.5rem;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:center; margin-bottom:1.5rem;">
+      <div style="width:6px; height:28px; background:var(--sbx-blue); border-radius:2px; margin-right:0.75rem;"></div>
+      <div>
+        <div style="font-size:1rem; font-weight:700; letter-spacing:0.05em; color:var(--sbx-white);">BOA Scoreboard</div>
+        <div style="font-size:0.7rem; color:#888; text-transform:uppercase; letter-spacing:0.08em;">Control Panel</div>
+      </div>
+    </div>
+
+    <!-- Server -->
+    <div class="sbx-card">
+      <h5>Server</h5>
+      <div class="sbx-label">Listening on</div>
+      <div style="font-size:0.85rem;" id='ipaddresses'></div>
+    </div>
+
+    <!-- Small Business Take Over -->
+    <div class="sbx-card">
+      <h5>Small Business Take Over</h5>
+      <p><span style="color:#888">Schedule:</span> <strong id='sbTakeoverTimesDisplay'>—</strong></p>
+      <p><span style="color:#888">Duration:</span> <strong id='sbTakeoverDurationDisplay'>—</strong>s</p>
+      <div class="action-row">
+        <button class='btn btn-sbx-primary' id='triggerSbTakeover'>Trigger Now</button>
+      </div>
+    </div>
+
+    <!-- Bus Take Over -->
+    <div class="sbx-card">
+      <h5>Bus Take Over</h5>
+      <p><span style="color:#888">Schedule:</span> <strong id='busTakeoverTimesDisplay'>—</strong></p>
+      <p><span style="color:#888">Relay Serial:</span> <strong id='busRelaySerialDisplay'>—</strong></p>
+      <p><span style="color:#888">Mode:</span> <strong id='busTakeoverModeDisplay'>—</strong></p>
+
+      <div class="action-row">
+        <button class='btn btn-sbx-primary' id='triggerBusTakeover'>Trigger Now</button>
+        <button class='btn btn-sbx-secondary' id='busMusicTest'>Test Music</button>
+      </div>
+
+      <div class="volume-row">
+        <span>Volume</span>
+        <input type='range' id='busVolumeSlider' min='0' max='1' step='0.01' value='1'>
+        <span id='busVolumeDisplay'>100%</span>
+      </div>
+
+      <div class="divider"></div>
+      <div class="section-header">Relay Controls</div>
+      <div class="relay-row">
+        <button class='btn btn-sbx-success' id='busRelay1On'>Relay 1 On</button>
+        <button class='btn btn-sbx-danger' id='busRelay1Off'>Relay 1 Off</button>
+        <button class='btn btn-sbx-success' id='busRelay2On'>Relay 2 On</button>
+        <button class='btn btn-sbx-danger' id='busRelay2Off'>Relay 2 Off</button>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="sbx-card">
+      <h5>Log</h5>
+      <div id='log'></div>
+    </div>
+
+    <br /><br />
+  </div>
+
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+  <script src="./js/jquery-3.3.1.min.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+  <script>if (window.module) module = window.module;</script>
+  <script src="app.js"></script>
+</body>
+</html>

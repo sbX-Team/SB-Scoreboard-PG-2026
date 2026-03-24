@@ -1,0 +1,51 @@
+.fb-caption{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -111px;
+  /* z-index: 99996; */
+  pointer-events: none;
+  text-align: center;
+  transition: opacity 200ms;
+  background: none;
+}
+
+.modal-backdrop.show {
+  opacity: 0.8 !important;
+}
+.fancybox-caption {
+  background: none;
+}
+
+.thumbImage{
+  width:150px;
+  /* margin:10px; */
+}
+.flex-column{
+  overflow: scroll;
+}
+
+.galleryThumbBox {
+  /* width: 150px; */
+    /* height: 40px; */
+    /* background-color: #e74c3c; */
+    /* margin: 20px; */
+    margin-bottom: 10px;
+}
+.galleryThumbBox:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.slider{
+  /* background-color: #333; */
+  width: 90%;
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+}
+
+.container-fluid{
+  margin-top:20px;
+}

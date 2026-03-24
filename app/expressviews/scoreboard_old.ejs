@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <title>Blank Page</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/expressassets/css/bootstrap.min.css" integrity="" crossorigin="anonymous">
+		<style>
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Medium.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Medium.woff') format('woff');
+		font-weight: 500;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Bold.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Bold.woff') format('woff');
+		font-weight: bold;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Light.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Light.woff') format('woff');
+		font-weight: 300;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Regular.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Regular.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Thin.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Thin.woff') format('woff');
+		font-weight: 100;
+		font-style: normal;
+		font-display: swap;
+	}
+
+
+
+
+		@font-face {
+		font-family: 'Dharma Gothic M W01 Heavy';
+		
+		src: url('/expressassets/fonts/b351dcd065baab704f0f94dceee9ed12.ttf') format('truetype');
+		}
+
+			body{
+				cursor: none; 
+				background-size:cover;
+				/* background-image: url('/expressassets/images/background.jpg'); */
+				background-color: #fff;
+			}
+			#connectionError{
+				position:absolute;
+				bottom: 0px;
+				right: 0px;
+				width: 100px;
+				display:none;
+			}
+			#mainContainer{
+				height:1920px;
+				width:1080px;
+				overflow: hidden;
+				/* font-weight:bold; */
+				font-family: "BMWTypeNext";
+				font-weight: 300;
+				/* background-color: #2e1a47; */
+			}
+			#newScore{
+				height:1920px;
+				width:1080px;
+				overflow: hidden;
+				/* font-weight:bold; */
+				/* background-color: #2e1a47; */
+			}
+			#header{
+				height:330px;
+				/* background-color: #2e1a47; */
+				text-align: center;
+				position:absolute;
+				top:0px;
+				left:0px;
+				width:1080px;
+			}
+			#logo{
+				margin:auto;
+				z-index: 10000;
+				position: absolute;
+				top:0px;
+				left: 0px;
+			}
+			#footer{
+				margin:auto;
+				z-index: 10000;
+				position: absolute;
+				bottom:0px;
+				left: 0px;
+			}
+			#tableHeader{
+				/* margin-top:333px; */
+				z-index: 10000;
+				position: absolute;
+				top:-11px;
+				left: 0px;
+				
+			
+			}
+			.table{
+				font-size:67px;
+				border-bottom: #6f6f6f;
+				margin-top:333px;
+				/* font-family: "TruistTrio";
+				font-weight:bold; */
+				width:80%;
+				margin:auto;
+			}
+			.table td{
+				padding-top:14px;
+				padding-bottom:14px;
+				/* background-color: #2e1a47; */
+				border-bottom: 3px solid #6f6f6f;
+				color: #6f6f6f;
+			}
+			.table th{
+				padding-top:50px;
+				padding-bottom:50px;
+				background-color: #afabc9;
+				border: 3px solid #7c6992;
+				color: #6f6f6f;
+				
+			}
+			.superscript { position: relative; top: -0.5em; font-size: 80%; }
+			.place{
+				text-align: left;
+				border-left:0px !important; 
+				width:30px;
+				/* font-family: "CarMax Sharp Sans Display"; */
+				/* font-weight:bold; */
+			}
+			.name{
+				padding-left:10px !important;
+				width:440px !important;
+				/* font-family: "CarMax Sharp Sans Display"; */
+				/* font-weight:bold; */
+				text-align: left;
+				overflow: hidden !important;; 
+			}
+			.score{
+				text-align:right;
+				border-right:0px !important;
+				width: 340px;
+				/* font-family: "CarMax Sharp Sans Display"; */
+				/* font-weight:bold; */
+			}
+
+			.table thead th {
+				border-top: 0px !important;
+			}
+			#header{
+				/* z-index: 1000; */
+			}
+			#scoreboard{
+				margin-top: 200px;
+			}
+			#mainContainer{
+				/* display: none; */
+			}
+			#newScore{
+				opacity: 0;
+				display: block;
+				position: absolute;
+				top:0px;
+				left:0px;
+				z-index: 10001;
+				/* background-image: url('/expressassets/images/newscore_background.jpg'); */
+				background-color: #fff;
+				color: #6f6f6f;
+				background-size: cover;
+				font-family: "BMWTypeNext";
+				font-weight: 300;
+			}
+			#square{
+				position: absolute;
+				bottom: -1140px;
+			}
+			#mascott{
+				position: absolute;
+				bottom:-10px;
+				left:-1238px;
+			}
+			#newName{
+				position: relative;
+    top: 259px;
+    /* left: 85px; */
+    font-size: 165px;
+    opacity: 0;
+    color: #6f6f6f;
+    margin: auto;
+    text-align: center;
+						}
+						#newScoreArea{
+							position: absolute;
+    top: 588px;
+    left: 0;
+    font-size: 264px;
+    /* font-family: "CarMax Sharp Sans Display"; */
+    color: #06205c;
+    opacity: 0;
+    width: 1080px;
+    text-align: center;
+    /* border: 1px solid; */
+    line-height: 1;
+						
+			
+						}
+			#newScoreText{
+				/* background-color: #fff;  */
+				/* padding-left: 20px; */
+				/* padding-right: 20px; */
+				display: inline-block;
+    color: #fff;
+    position: absolute;
+    left: 290px;
+    top: 600px;
+    font-size: 180px;
+    /* border: 1px solid; */
+    width: 500px;
+			}
+			#pts{
+				position: relative;
+    			top: -44px;
+				font-size: 245px;
+				display: block;
+				/* right: -308px; */
+			}
+
+			.table td, .table th {
+				padding: 0.75rem;
+				vertical-align: top;
+				border-top: 0px solid #06205c;
+			}
+						
+			
+		</style>
+		
+		
+    <!-- Head Libs -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    	// var socket = io('http://<%= ip %>:3000')
+    </script>
+</head>
+
+<body class='blue'>
+	
+	<div id='mainContainer' style='position:absolute; top:0px; left:0px;'>
+		<div id='header'>
+			<img src='/expressassets/images/logo.png' id='logo' />
+		</div>
+		<table id='tableHeader' class='table'>
+			<!-- <thead>
+				<tr>
+				  <th scope="col"  class='place'>Place</th>
+				  <th scope="col" class='name'>Player</th>
+				  <th scope="col" class='score'>Score</th>
+				</tr>
+			  </thead> -->
+		</table>
+		
+		<table class="table" id='scoreboard'>
+
+			
+
+
+
+			<tbody>
+				<%
+				console.log('test')
+					// console.log(scoreboard)
+					for (i = 0; i < scoreboard.length; i++) {
+						var place = i + 1
+						%>
+						<tr>
+							<td scope="row" class='place'><%= place %>.</th>
+							<td  class='name'></div><%=scoreboard[i].nickname %></td>
+							<td class='score'><%=scoreboard[i].score %> mph</td>
+				
+						</tr>
+						<%
+					console.log(scoreboard[i]);
+					}
+					if(i < 50){
+						// place++
+						while(i < 50){
+							place++
+							%>
+							<tr>
+								<td scope="row" class='place'><%= place %></th>
+								<td  class='name'></td>
+								<td class='score'></td>
+					
+							</tr>
+							<%
+							i++
+						}
+					} 
+				%>
+			</tbody>
+		  </table>
+		 
+	</div> <!-- end container -->  
+	<div id='footer'>
+			<img src='/expressassets/images/footer.png' id='footer' />
+		</div>
+
+	<div id='newScore'>
+	
+		<div id='newName'>Jason</div>
+		
+		
+		<div id='newScoreArea'>
+			<canvas id="guageArea">
+
+</canvas>
+			<div id="newScoreText">500</div>
+		
+			
+		</div>
+		<img src='/expressassets/images/square.png' id='square'/>
+		<img src='/expressassets/images/mascott.png' id='mascott'/>
+
+	</div>
+
+
+	
+
+
+
+
+	
+	<img src='/expressassets/images/disconnected.png' id='connectionError' />
+	<script src="/expressassets/js/jquery-3.4.1.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/popper.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/parsley.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/bootstrap-waitingfor.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/velocity.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/velocity.ui.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/gauge.min.js"  crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	
+	var ip = window.location.host
+	console.log(ip)
+    var socket = io(ip)
+	var numScores = <%= scoreboard.length %>
+
+
+    </script>
+	<script src="/scoreboard.js"  crossorigin="anonymous"></script>
+	<!-- <script src="/expressassets/js/shareappGlobal.js"  crossorigin="anonymous"></script> -->
+
+	
+</body>
+
+
+</html>

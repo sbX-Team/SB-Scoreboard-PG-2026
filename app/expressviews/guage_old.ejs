@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <title>Blank Page</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/expressassets/css/bootstrap.min.css" integrity="" crossorigin="anonymous">
+		<style>
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Medium.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Medium.woff') format('woff');
+		font-weight: 500;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Bold.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Bold.woff') format('woff');
+		font-weight: bold;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Light.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Light.woff') format('woff');
+		font-weight: 300;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Regular.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Regular.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+		font-display: swap;
+	}
+
+	@font-face {
+		font-family: 'BMWTypeNext';
+		src: url('/expressassets/fonts/BMWTypeNext-Thin.woff2') format('woff2'),
+			url('/expressassets/fonts/BMWTypeNext-Thin.woff') format('woff');
+		font-weight: 100;
+		font-style: normal;
+		font-display: swap;
+	}
+
+
+		body{
+			cursor: none; 
+			background-size:cover;
+            background-color:#000;
+			/* background-image: url('/expressassets/images/background.jpg'); */
+		}
+			#connectionError{
+				position:absolute;
+				bottom: 0px;
+				right: 0px;
+				width: 100px;
+				display:none;
+			}
+			#mainContainer{
+				height:1920px;
+				width:1080px;
+				overflow: hidden;
+				font-weight:bold;
+				/* background-color: #2e1a47; */
+			}
+			#newScore{
+				height:1920px;
+				width:1080px;
+				overflow: hidden;
+				font-weight:bold;
+				/* background-color: #2e1a47; */
+			}
+			#header{
+				height:330px;
+				/* background-color: #2e1a47; */
+				text-align: center;
+				position:absolute;
+				top:0px;
+				left:0px;
+				width:1080px;
+			}
+			#logo{
+				margin:auto;
+				z-index: 10000;
+				position: absolute;
+				top:0px;
+				left: 0px;
+			}
+			#footer{
+				margin:auto;
+				z-index: 10000;
+				position: absolute;
+				bottom:0px;
+				left: 0px;
+			}
+			#tableHeader{
+				/* margin-top:333px; */
+				z-index: 10000;
+				position: absolute;
+				top:-11px;
+				left: 0px;
+				
+			
+			}
+			.table{
+				font-size:65px;
+				border-bottom: #06205c;
+				margin-top:333px;
+				/* font-family: "TruistTrio";
+				font-weight:bold; */
+				width:74%;
+				margin:auto;
+			}
+			.table td{
+				padding-top:14px;
+				padding-bottom:14px;
+				/* background-color: #2e1a47; */
+				border-bottom: 3px solid #06205c;
+				color: #06205c;
+			}
+			.table th{
+				padding-top:50px;
+				padding-bottom:50px;
+				background-color: #afabc9;
+				border: 3px solid #7c6992;
+				color: #06205c;
+				
+			}
+			.superscript { position: relative; top: -0.5em; font-size: 80%; }
+			.place{
+				text-align: left;
+				border-left:0px !important; 
+				width:30px;
+				font-family: "CarMax Sharp Sans Display";
+				font-weight:bold;
+			}
+			.name{
+				padding-left:10px !important;
+				width:440px !important;
+				font-family: "CarMax Sharp Sans Display";
+				font-weight:bold;
+				text-align: left;
+				overflow: hidden !important;; 
+			}
+			.score{
+				text-align:right;
+				border-right:0px !important;
+				width: 300px;
+				font-family: "CarMax Sharp Sans Display";
+				font-weight:bold;
+			}
+
+			.table thead th {
+				border-top: 0px !important;
+			}
+			#header{
+				/* z-index: 1000; */
+			}
+			#scoreboard{
+				margin-top: 600px;
+			}
+			#mainContainer{
+				/* display: none; */
+			}
+			#newScore{
+				opacity: 0;
+				display: block;
+				position: absolute;
+				top:0px;
+				left:0px;
+				z-index: 10001;
+				/* background-image: url('/expressassets/images/newscore_background.jpg'); */
+				background-color: #06205c;
+				background-size: cover;
+			}
+			#square{
+				position: absolute;
+				bottom: -1140px;
+			}
+			#mascott{
+				position: absolute;
+				bottom:-10px;
+				left:-1238px;
+			}
+			#newName{
+				position: relative;
+    top: 595px;
+    /* left: 85px; */
+    font-size: 103px;
+    font-family: "CarMax Sharp Sans Display";
+    font-weight: bold;
+    opacity: 0;
+    color: #06205c;
+    margin: auto;
+    text-align: center;
+			}
+			#newScoreArea{
+				position: absolute;
+    top: 774px;
+    left: 160px;
+    font-size: 428px;
+    font-family: "CarMax Sharp Sans Display";
+    color: #06205c;
+    opacity: 0;
+    width: 750px;
+    text-align: center;
+    /* border: 1px solid; */
+	line-height: 1;
+			
+   
+			}
+			#newScoreText{
+				/* background-color: #fff; */
+				/* padding-left:20px; */
+				/* padding-right:20px; */
+				display: inline-block;
+				color: #06205c;
+			}
+			#pts{
+				position: relative;
+    			top: -44px;
+				font-size: 245px;
+				display: block;
+				/* right: -308px; */
+			}
+
+			.table td, .table th {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 0px solid #06205c;
+}
+			
+
+#guageTop{
+	height:1920px;
+	width:1080px;
+	position:absolute;
+	background-image: url('/expressassets/images/speedTop.png');
+}
+#color{
+	/* border-top:10px solid #a9ff00; */
+	background: rgb(70,34,36);
+background: linear-gradient(0deg, rgba(70,34,36,1) 0%, rgba(255,255,255,1) 100%);
+	width:1080px;
+	height:16px;
+	position: absolute;
+	bottom:391px;
+	left:0px;
+	-webkit-box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: 1px 1px 3px 0 rgba(0, 0, 0, 0.5);
+}
+
+#line{
+	background-image: url('/expressassets/images/line.png');
+	width: 300px;
+	height:0px;
+	position: absolute;
+	bottom:391px;
+	left:386px;
+	background-repeat: no-repeat;
+	background-position: top left;
+	height:26px;
+
+}
+
+.speedNumber{
+	font-family: "BMWTypeNext";
+	font-weight: 300;
+	font-size: 65px;
+	color: #fff
+}
+
+#zero{
+	position: absolute;
+    top: 1441px;
+    left: 601px;
+}
+
+#twenty{
+	position: absolute;
+    top: 1312px;
+    left: 517px;
+}
+
+#fourty{
+	position: absolute;
+    top: 1176px;
+    left: 429px;
+}
+#sixty{
+	position: absolute;
+    top: 1039px;
+    left: 354px;
+}
+#eighty{
+	position: absolute;
+    top: 906px;
+    left: 294px;
+}
+
+#onehundred{
+	position: absolute;
+    top: 775px;
+    left: 399px;
+}
+#onetwenty{
+	position: absolute;
+    top: 657px;
+    left: 513px;
+}
+
+#oneforty{
+	position: absolute;
+    top: 545px;
+    left: 607px;
+}
+
+</style>
+		
+		
+    <!-- Head Libs -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    	// var socket = io('http://<%= ip %>:3000')
+    </script>
+</head>
+
+<body class='blue'>
+	<div id="color">
+	
+	</div>
+
+<div id="guageTop">
+	<div id="zero" class="speedNumber">0</div>
+	<div id="twenty" class="speedNumber">20</div>
+	<div id="fourty" class="speedNumber">40</div>
+	<div id="sixty" class="speedNumber">60</div>
+	<div id="eighty" class="speedNumber">80</div>
+	<div id="onehundred" class="speedNumber">100</div>
+	<div id="onetwenty" class="speedNumber">120</div>
+	<div id="oneforty" class="speedNumber">140</div>
+	
+</div>
+<div id="line">
+	
+</div>
+
+
+
+
+	
+
+
+
+
+	
+	<img src='/expressassets/images/disconnected.png' id='connectionError' />
+	<script src="/expressassets/js/jquery-3.4.1.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/popper.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/parsley.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/bootstrap-waitingfor.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/velocity.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/velocity.ui.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/gauge.min.js"  crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	
+	var ip = window.location.host
+	console.log(ip)
+    var socket = io(ip)
+	var numScores = <%= scoreboard.length %>
+	var speed = 90
+	//963
+
+	var maxHeight = 963
+	if(speed <= 110){
+		maxHeight = 990
+	}
+
+	if(speed <= 80){
+		maxHeight = 1000
+	}
+	if(speed < 70){
+		maxHeight = 1025
+	}
+	if(speed < 50){
+		maxHeight = 1050
+	}
+	if(speed < 30){
+		maxHeight = 1200
+	}
+	
+
+	var height = map_range(speed, 0, 140, 0, maxHeight)
+	var halfheight= map_range(80, 0, 140, 0, maxHeight)
+	console.log(height)
+	console.log(halfheight)
+	var leftValue
+
+	setTimeout(() => {
+		var percentageChange = map_range(speed, 0, 80, 0, 100) 
+		
+
+		console.log(386 - (314 * (percentageChange / 100)))
+		console.log(percentageChange)
+		// leftValue = map_range((1519 - elements[0].offsetTop), 0, 550, 0, 80)
+		$('#color').velocity({height:height}, {
+			duration: 3000,
+		 	easing: 'linear'
+		})
+		if(speed >= 80){
+			var endLeft = 386 - (331 * (percentageChange / 100))
+			$('#line').velocity({height:halfheight-45, left: 72}, {duration:1500, easing: 'linear',
+				complete: function(){
+
+					$('#line').velocity({height:height+10, left: endLeft}, {duration:1500, easing: 'linear'})
+				}})
+			
+		}
+		else{
+			var endLeft = 386 - (331 * (percentageChange / 100))
+			$('#line').velocity({height:height+10, left: endLeft}, {duration:3000, easing: 'linear'})
+		}
+		
+	}, 3000);
+
+
+
+	function map_range(value, low1, high1, low2, high2) {
+    	return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+	}
+
+// setTimeout(() => {
+//         gauge.value = 0;
+//     }, 10000);
+
+
+    </script>
+	<!-- <script src="/scoreboard.js"  crossorigin="anonymous"></script> -->
+	<!-- <script src="/expressassets/js/shareappGlobal.js"  crossorigin="anonymous"></script> -->
+
+	
+</body>
+
+
+</html>

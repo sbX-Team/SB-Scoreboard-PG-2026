@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+  </head>
+  <body>
+
+    <!-- All of the Node.js APIs are available in this renderer process. -->
+  <form id='settingsform'>
+    <div class="container">
+    <h1>Settings</h1>
+
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Reset Delay (ms):
+        <input type='number' name='resetDelay' id='resetDelay' class='form-control' style='width:200px' placeholder='5000'>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Animation Duration (ms):
+        <input type='number' name='animationDuration' id='animationDuration' class='form-control' style='width:200px' placeholder='3000'>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Animation Reset Duration (ms):
+        <input type='number' name='animationResetDuration' id='animationResetDuration' class='form-control' style='width:200px' placeholder='1000'>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        New Score Display Time (ms):
+        <input type='number' name='newScoreDisplayTime' id='newScoreDisplayTime' class='form-control' style='width:200px' placeholder='5000'>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Leaderboard Page Duration (ms):
+        <input type='number' name='cycleInterval' id='cycleInterval' class='form-control' style='width:200px' placeholder='6000'>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Small Business Take Over — Minutes (comma-separated, fires every hour at these minutes, e.g. 15, 45):
+        <input type='text' name='sbTakeoverTimes' id='sbTakeoverTimes' class='form-control' style='width:300px' placeholder='15, 45'>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Small Business Take Over — Duration (seconds):
+        <input type='number' name='sbTakeoverDuration' id='sbTakeoverDuration' class='form-control' style='width:200px' placeholder='30'>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-12"><hr /><h4>Bus Take Over</h4></div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Bus Take Over — Minutes (comma-separated, e.g. 10, 40):
+        <input type='text' name='busTakeoverTimes' id='busTakeoverTimes' class='form-control' style='width:300px' placeholder='10, 40'>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Bus Take Over Mode:
+        <select name='busTakeoverMode' id='busTakeoverMode' class='form-control' style='width:300px'>
+          <option value='timer'>Timer (scheduled minutes)</option>
+          <option value='highscore'>New High Score</option>
+        </select>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        New High Score — Cooldown (seconds between triggers):
+        <input type='number' name='busHighScoreCooldown' id='busHighScoreCooldown' class='form-control' style='width:200px' placeholder='60'>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Relay Board Serial Number:
+        <input type='text' name='busRelaySerialNumber' id='busRelaySerialNumber' class='form-control' style='width:300px'>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Relay 1 Delay (ms before firing):
+        <input type='number' name='busRelay1Delay' id='busRelay1Delay' class='form-control' style='width:200px' placeholder='0'>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Relay 1 On Time (ms):
+        <input type='number' name='busRelay1OnTime' id='busRelay1OnTime' class='form-control' style='width:200px' placeholder='1000'>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Relay 2 Delay (ms before firing):
+        <input type='number' name='busRelay2Delay' id='busRelay2Delay' class='form-control' style='width:200px' placeholder='0'>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        Relay 2 On Time (ms):
+        <input type='number' name='busRelay2OnTime' id='busRelay2OnTime' class='form-control' style='width:200px' placeholder='1000'>
+        </div>
+    </div>
+    <div class='row settingfield'>
+        <div class="col-md-4">
+        MP3 Start Delay (ms after relay trigger):
+        <input type='number' name='busMp3Delay' id='busMp3Delay' class='form-control' style='width:200px' placeholder='0'>
+        </div>
+    </div>
+
+   <div class='row settingfield'>
+        <div class="col-xs-4">
+          <input type='button' class='btn btn-primary' value='Save Settings' id='savesettings'>
+        </div>
+        <div class="col-xs-4">
+          <input type='button' class='btn btn-primary' value='Cancel' id='cancelsettings'>
+        </div>
+      </div>
+    </form>
+
+    
+
+
+    <br /><br /><br /><br />
+  </body>
+  <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+  <script src="js/jquery-3.3.1.min.js"></script>
+ 	<script src="js/bootstrap.min.js"></script>
+  <script>if (window.module) module = window.module;</script>
+  <script src="./settings.js"></script>
+
+</html>

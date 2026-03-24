@@ -1,0 +1,703 @@
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Source Code Pro' !important;
+}
+.ripple {
+    position: relative;
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+  }
+  
+  .ripple:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform .5s, opacity 1s;
+  }
+  
+  .ripple:active:after {
+    transform: scale(0, 0);
+    opacity: .3;
+    transition: 0s;
+  }
+
+<%
+if(settings.photoPlaceHolderHeight){
+%>
+    .photoPlaceHolder{
+        height: <%= settings.photoPlaceHolderHeight  %>px !important; 
+    }
+    #mainImage{
+        height: <%= settings.photoPlaceHolderHeight  %>px !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.mainPhotoBorderRadius){
+    %>
+    #mainImage{
+        border-radius: <%= settings.mainPhotoBorderRadius  %>px !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.photoBorderWidth){
+    %>
+    #video{
+        border-style: solid;
+        border-width: <%= settings.photoBorderWidth  %>px !important; 
+    }
+    #mainImage{
+        border-style: solid;
+        border-width: <%= settings.photoBorderWidth  %>px !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.photoBorderColor){
+    %>
+    #video{
+        border-color: <%= settings.photoBorderColor  %> !important; 
+    }
+    #mainImage{
+        border-color: <%= settings.photoBorderColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.backgroundColor){
+    %>
+    body{
+        background-color: <%= settings.backgroundColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.backgroundImage){
+    %>
+    body{
+        background-image: url("/assets/<%= settings.shareAppId  %>/<%= settings.backgroundImage  %> ") !important;
+        background-size:cover; 
+    }
+    <%
+}
+%>
+<%
+if(settings.fontColor){
+    %>
+    body{
+        color: <%= settings.fontColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.font){
+    fontoptions = settings.font.split('|')
+    %>
+    body{
+        font-family: '<%= fontoptions[0]  %>'!important; 
+        font-weight: <%= fontoptions[1]  %> !important; 
+        font-style: <%= fontoptions[2]  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.buttonFont){
+    buttonFont = settings.buttonFont.split('|')
+    %>
+    .btn{
+        font-family: '<%= buttonFont[0]  %>'!important; 
+        font-weight: <%= buttonFont[1]  %> !important; 
+        font-style: <%= buttonFont[2]  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.buttonPrimaryColor){
+    %>
+    .btn-primary{
+        background-color: <%= settings.buttonPrimaryColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.buttonPrimaryColorFont){
+    %>
+    .btn-primary{
+        color: <%= settings.buttonPrimaryColorFont  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.buttonPrimaryBorderColor){
+    %>
+    .btn-primary{
+        border-color: <%= settings.buttonPrimaryBorderColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.buttonSecondaryColor){
+    %>
+    .btn-secondary{
+        background-color: <%= settings.buttonSecondaryColor  %> !important; 
+    } 
+    <%
+}
+%>
+<%
+if(settings.buttonSecondaryColorFont){
+    %>
+    .btn-secondary{
+        color: <%= settings.buttonSecondaryColorFont  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.buttonSecondaryBorderColor){
+    %>
+    .btn-secondary{
+        border-color: <%= settings.buttonSecondaryBorderColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.formFontColor){
+    %>
+    .form-control{
+        color: <%= settings.formFontColor  %> !important; 
+    }
+    .formeo input{
+        color: <%= settings.formFontColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.formInputBorder){
+    %>
+    .form-control{
+        border: <%= settings.formInputBorder  %> !important; 
+    }
+    .formeo input{
+        border: <%= settings.formInputBorder  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.formInputBorderWidth){
+    %>
+    .form-control{
+        border-style: solid !important; 
+        border-width: <%= settings.formInputBorderWidth  %>px !important; 
+    }
+    .formeo input{
+        border-style: solid !important; 
+        border-width: <%= settings.formInputBorderWidth  %>px !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.font){
+    fontoptions = settings.font.split('|')
+    %>
+    body{
+        font-family: '<%= fontoptions[0]  %>'!important; 
+        font-weight: <%= fontoptions[1]  %> !important; 
+        font-style: <%= fontoptions[2]  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.formHeaderFont){
+    fontoptionsHeader = settings.formHeaderFont.split('|')
+    %>
+
+    h1{
+        font-family: '<%= fontoptionsHeader[0]  %>'!important; 
+        font-weight: <%= fontoptionsHeader[1]  %> !important; 
+        font-style: <%= fontoptionsHeader[2]  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.formHeaderMarginTop){
+   
+    %>
+
+    h1{
+        margin-top: <%= settings.formHeaderMarginTop  %>px !important; 
+
+    }
+    <%
+}
+%>
+<%
+if(settings.formHeaderMarginBottom){
+   
+    %>
+
+    h1{
+        margin-bottom: <%= settings.formHeaderMarginBottom  %>px !important; 
+
+    }
+    <%
+}
+%>
+<%
+if(settings.formRowMarginBottom){
+   
+    %>
+
+    .formeo.formeo-render .formeo-row-wrap{
+        margin-bottom: <%= settings.formRowMarginBottom  %>px !important; 
+
+    }
+    <%
+}
+%>
+<%
+if(settings.forminputBackgroundColor){
+    %>
+    .form-control{
+       background-color: <%= settings.forminputBackgroundColor %> !important; 
+    }
+    .formeo input{
+        background-color: <%= settings.forminputBackgroundColor %> !important;  
+    }
+    <%
+}
+%>
+<%
+if(settings.requiredFont){
+    var requiredFont = settings.requiredFont.split('|')
+    %>
+    .text-error {
+        font-family: '<%= requiredFont[0]  %>'!important; 
+        font-weight: <%= requiredFont[1]  %> !important; 
+        font-style: <%= requiredFont[2]  %> !important; 
+    }   
+    <%
+}
+%>
+<%
+if(settings.requireColor){
+   
+    %>
+    .text-error {
+       color: <%= settings.requireColor %> !important; 
+    }   
+    <%
+}
+%>
+<%
+if(settings.requiredSize){
+   
+    %>
+    .text-error {
+       font-size: <%= settings.requiredSize %>px !important; 
+    }   
+    <%
+}
+%>
+<%
+if(settings.checkboxFont){
+    var scheckboxFont = settings.checkboxFont.split('|')
+    %>
+    input[type="checkbox"] ~ label {
+        font-family: '<%= scheckboxFont[0]  %>'!important; 
+        font-weight: <%= scheckboxFont[1]  %> !important; 
+        font-style: <%= scheckboxFont[2]  %> !important; 
+    }   
+    <%
+}
+%>
+
+<%
+if(settings.checkBoxTextSize){
+    %>
+    input[type="checkbox"] ~ label {
+    font-size: <%= settings.checkBoxTextSize %>px !important;
+    }   
+    <%
+}
+%>
+<%
+if(settings.labelTextSize){
+    %>
+    label {
+    font-size: <%= settings.labelTextSize %>px !important;
+    }   
+    <%
+}
+%>
+<%
+if(settings.checkboxAlignment){
+    %>
+    input[type="checkbox"] ~ label {
+    display: <%= settings.checkboxAlignment %> !important;
+    }   
+    <%
+}
+%>
+
+
+input[type="checkbox"]
+{
+    vertical-align:middle;
+}
+
+<%
+if(settings.inputHeight){
+    %>
+    .form-control{
+    
+        height: <%= settings.inputHeight  %>px !important; 
+    }
+    .formeo input{
+        height: <%= settings.inputHeight  %>px !important;
+    }
+    <%
+}
+%>
+
+<%
+if(settings.buttonPaddingTopBottom){
+    %>
+    .btn{
+    
+        padding-top: <%= settings.buttonPaddingTopBottom  %>px !important; 
+        padding-bottom: <%= settings.buttonPaddingTopBottom  %>px !important; 
+    }
+    
+    <%
+}
+%>
+<%
+if(settings.buttonPaddingRightLeft){
+    %>
+    .btn{
+    
+        padding-left: <%= settings.buttonPaddingRightLeft  %>px !important; 
+        padding-right: <%= settings.buttonPaddingRightLeft  %>px !important; 
+    }
+    
+    <%
+}
+%>
+<%
+if(settings.formBackgroundImage){
+    %>
+    #test{
+        background-image: url("/assets/<%= settings.shareAppId  %>/<%= settings.formBackgroundImage  %> ") !important;
+        background-size:cover; 
+    }
+    <%
+}
+%>
+<%
+if(settings.formBackgroundColor){
+    %>
+    #test{
+        background-color: <%= settings.formBackgroundColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.modalBackground){
+    %>
+    .modal-content{
+        background-color: <%= settings.modalBackground  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.sliderArrowColor){
+    %>
+    .swiper-button-next, .swiper-button-prev {
+        color: <%= settings.sliderArrowColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.linkColor){
+    %>
+    a { 
+        color: <%= settings.linkColor  %> !important;
+    }
+    <%
+}
+%>
+<%
+if(settings.linkTextDecoration){
+    %>
+    a { 
+        text-decoration: <%= settings.linkTextDecoration  %> !important;
+    }
+    <%
+}
+%>
+<%
+if(settings.fontSize){
+    %>
+    body {
+        font-size: <%= settings.fontSize  %>px !important; 
+    }
+    <%
+}
+%>
+
+<%
+if(settings.shareButtonFontSize){
+    %>
+    .shareButton {
+        font-size: <%= settings.shareButtonFontSize  %>px !important; 
+    }
+    <%
+}
+%>
+.photo{
+    height: 500px !important;;
+}
+<%
+if(settings.f_field_group_alignment){
+    %>
+    .f-field-group{
+    text-align:<%= settings.f_field_group_alignment  %> !important; 
+    }
+    .f-checkbox{
+        text-align:<%= settings.f_field_group_alignment  %> !important;
+    }
+    <%
+}
+%>
+<%
+if(settings.buttonBorderRadius){
+    %>
+    .btn{
+    border-radius:<%= settings.buttonBorderRadius  %>px !important; 
+    }
+    .submit_form{
+        border-radius:<%= settings.buttonBorderRadius  %>px !important; 
+    }
+    .cancel_button{
+        border-radius:<%= settings.buttonBorderRadius  %>px !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.inputBorderRadius){
+    %>
+    .formeo input{
+    border-radius:<%= settings.inputBorderRadius  %>px !important; 
+    }
+    .form-control{
+    border-radius:<%= settings.inputBorderRadius  %>px !important; 
+    }
+
+    <%
+}
+%>
+<%
+if(settings.inputBorderRadius){
+    %>
+    .formeo input{
+    border-radius:<%= settings.inputBorderRadius  %>px !important; 
+    }
+    .form-control{
+    border-radius:<%= settings.inputBorderRadius  %>px !important; 
+    }
+
+    <%
+}
+%>
+
+<%
+if(settings.thumbBorderWidth){
+    %>
+    .thumbImage{
+        border-style: solid !important; 
+        border-width: <%= settings.thumbBorderWidth  %>px !important; 
+    }
+    <%
+}
+%>
+
+<%
+if(settings.thumbBorderColor){
+    %>
+    .thumbImage{
+        border-color: <%= settings.thumbBorderColor  %> !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.thumbBorderRadius){
+    %>
+    .thumbImage{
+        border-radius: <%= settings.thumbBorderRadius  %>px !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.thumbWidth){
+    %>
+    .galleryThumbBox{
+        width: <%= settings.thumbWidth  %>px !important; 
+    }
+    .thumbImage{
+        width: <%= settings.thumbWidth  %>px !important; 
+    }
+    <%
+}
+%>
+<%
+if(settings.thumbPaddingGallery){
+    %>
+    .galleryThumbBox{
+        margin-bottom: <%= settings.thumbPaddingGallery  %>px !important; 
+    }
+    <%
+}
+%>
+.fa-plus-square{
+    margin-top: 2rem!important;
+}
+
+
+
+.form-check {
+    position: relative;
+    display: block;
+    padding-left: 0.5rem;
+}
+// .slick-slide {
+//     padding:5px;
+//     // position: relative;
+//     // display: block;
+//     // padding-left: 0.5rem;
+// }
+// .slick-slide img {
+//     padding:0px;
+// }
+.modal-full {
+    min-width: 20%;
+    margin-left: 80;
+}
+
+.modal-full .modal-content {
+    min-height: 90vh;
+}
+
+  input[type=checkbox] {
+    <%
+    if(settings.checkboxScale){
+        %>
+        -webkit-transform: scale( <%= settings.checkboxScale  %>,  <%= settings.checkboxScale  %>);
+        <%
+    } else {
+        %>
+        -webkit-transform: scale(3, 3);
+        <%
+    }
+    if(settings.checkboxAdjustTop){
+        %>
+        top:<%=settings.checkboxAdjustTop %>px !important;
+        <%
+    }
+    if(settings.checkboxAdjustLeft){
+        %>
+        margin-right:<%=settings.checkboxAdjustLeft %>px !important;
+        <%
+    }
+    %>
+    
+    // -webkit-transform: scale(3, 3);
+     margin: 0em .25em 0em 0;
+     position: relative;
+     height: auto !important;
+     /* top: 1px; */
+ }
+  /* form Validation */
+    input.parsley-success,
+    select.parsley-success,
+    textarea.parsley-success {
+    color: #468847;
+    background-color: #DFF0D8;
+    border: 1px solid #D6E9C6;
+    }
+
+    input.parsley-error,
+    select.parsley-error,
+    textarea.parsley-error {
+    color: #B94A48 !important;
+    background-color: #F2DEDE !important;
+    border: 1px solid #EED3D7 !important;
+}
+
+.parsley-errors-list {
+    margin: 7px 0 3px;
+    padding: 0;
+    list-style-type: none;
+    font-size: 0.9em;
+    line-height: 0.9em;
+    opacity: 0;
+    color: #B94A48;
+  
+    transition: all .3s ease-in;
+    -o-transition: all .3s ease-in;
+    -moz-transition: all .3s ease-in;
+    -webkit-transition: all .3s ease-in;
+  }
+  
+  .parsley-errors-list.filled {
+    opacity: 1;
+  }
+
+  #connectionError{
+      position:absolute;
+        bottom: 0px;
+        right: 0px;
+        width: 100px;
+        display:none;
+  }
+  .container-fluid{
+      z-index:0;
+  }
+  #test{
+    display:none;
+    }

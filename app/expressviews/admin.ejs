@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <title>Blank Page</title>
+        <!-- CSS -->
+        <link rel="stylesheet" href="/expressassets/css/bootstrap.min.css" integrity="" crossorigin="anonymous">
+		<style>
+		
+			
+		</style>
+		
+		
+    <!-- Head Libs -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    	// var socket = io('http://<%= ip %>:3000')
+    </script>
+</head>
+
+<body class='blue'>
+	
+	<div id='mainContainer'>
+		<%- include ('menu') %>    
+		<div class='col-md-6 mt-2 mb-3 offset-md-3 text-center' >
+		
+			<a class='btn btn-primary' href='/deleteall2'>Delete All</a>
+			<!-- <a class='btn btn-primary' href='/bat'>Bat Connection</a> -->
+		
+		</div>
+
+		<div class='col-md-6 offset-md-3'>
+		<table class="table" id='scoreboard'>
+            <thead>
+				<tr>
+				  <th scope="col"  class='place'>Place</th>
+				  <th scope="col" class='name'>Player</th>
+				  <th scope="col" class='score'>Score</th>
+				  <th scope="col" class='score'>Action</th>
+				</tr>
+			  </thead>
+
+			
+
+
+
+			<tbody>
+				<%
+				console.log('test')
+					// console.log(scoreboard)
+					for (i = 0; i < scoreboard.length; i++) {
+						var place = i + 1
+						%>
+						<tr>
+							<td scope="row" class='place'><%= place %><span class='superscript'><%= someHelper(place) %></span></th>
+							<td  class='name'><%=scoreboard[i].nickname %> </td>
+							<td class='score'><%=scoreboard[i].score %></td>
+							<td class='score'><a href='delete?recordID=<%=scoreboard[i]._id %>' class='btn btn-danger' data-recordID="<%=scoreboard[i]._id %>" class='delete'>Delete</a></td>
+				
+						</tr>
+						<%
+					console.log(scoreboard[i]);
+					}
+		
+				%>
+			</tbody>
+		  </table>
+		 
+	</div> <!-- end container -->  
+
+
+
+
+	
+
+
+
+
+	
+
+	<script src="/expressassets/js/jquery-3.4.1.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/popper.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/parsley.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/bootstrap-waitingfor.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/velocity.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/jquery.dataTables.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/dataTables.bootstrap4.min.js"  crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	
+	var ip = window.location.host
+	console.log(ip)
+    var socket = io(ip)
+	var numScores = <%= scoreboard.length %>
+
+
+    </script>
+	<script src="/admin.js"  crossorigin="anonymous"></script>
+
+
+	
+</body>
+
+
+</html>

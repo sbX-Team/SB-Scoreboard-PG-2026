@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+        <title>Blank Page</title>
+        <!-- CSS -->
+         <link rel="stylesheet" href="/expressassets/css/bootstrap.min.css" integrity="" crossorigin="anonymous">
+		<link rel="stylesheet" href="/expressassets/css/all.min.css" integrity="" crossorigin="anonymous">
+		<link rel="stylesheet" href="/expressassets/css/fonts.css" integrity="" crossorigin="anonymous">  
+		<style>
+			#log{
+        		height:300px;
+        		overflow: scroll;
+      		}
+		</style> 
+		
+    <!-- Head Libs -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    	// var socket = io('http://<%= ip %>:3000')
+    </script>
+</head>
+
+<body class='blue'>
+	<div class="container-fluid h-100" style='position:absolute; top:0px; left:0px;'>
+		<div class="h-100 d-flex flex-column">
+			<div class="col">
+				<div class="form-control " id="log" rows="10"></div>
+
+                </div>	
+				
+				
+			</div>
+			<div class='row justify-content-md-center bg-blue flex-grow-1'>
+				
+			
+			</div>
+		</div>
+		</div>
+	</div> <!-- end container -->  
+
+
+	
+
+
+
+
+	
+	<img src='/expressassets/images/disconnected.png' id='connectionError' />
+	<script src="/expressassets/js/jquery-3.4.1.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/popper.min.js"  crossorigin="anonymous"></script>
+    <script src="/expressassets/js/bootstrap.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/parsley.min.js"  crossorigin="anonymous"></script>
+	<script src="/expressassets/js/bootstrap-waitingfor.min.js"  crossorigin="anonymous"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	
+	var ip = window.location.host
+	console.log(ip)
+    var socket = io(ip)
+
+
+    </script>
+	<script src="/sockettest.js"  crossorigin="anonymous"></script>
+	<!-- <script src="/expressassets/js/shareappGlobal.js"  crossorigin="anonymous"></script> -->
+
+	
+</body>
+
+
+</html>
