@@ -657,6 +657,10 @@ $(document).ready(function () {
 $(function () {
 // Button Actions
 
+  $('#closeScoreboard').on('click', function () {
+    ipcRenderer.send('closeScoreboard')
+  })
+
   $('#triggerSbTakeover').on('click', _.debounce(function () {
     ipcRenderer.send('sbTakeoverStart', { duration: sbTakeoverDuration })
   }, 3000, true))

@@ -5,7 +5,7 @@
 
 import path from 'path'
 import url from 'url'
-import { app, Menu, dialog, ipcMain, shell } from 'electron'
+import { app, Menu, dialog, ipcMain, shell, screen } from 'electron'
 import { devMenuTemplate } from './menu/dev_menu_template'
 import { editMenuTemplate } from './menu/edit_menu_template'
 import createWindow from './helpers/window'
@@ -116,7 +116,8 @@ app.on('ready', () => {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      backgroundThrottling: false
     }
   })
   remoteMain.enable(mainWindow.webContents)
@@ -147,6 +148,12 @@ app.on('ready', () => {
 
   ipcMain.on('busHighScoreTrigger', function () {
     mainWindow.webContents.send('busHighScoreTrigger')
+  })
+
+  ipcMain.on('closeScoreboard', function () {
+    if (scoreboardWindow) {
+      scoreboardWindow.close()
+    }
   })
 
   ipcMain.on('settingsUpdated', function (event, data) {
@@ -301,12 +308,23 @@ function createScoreboardWindow () {
     scoreboardWindow = createWindow('scoreboard', {
       width: 1920,
       height: 1080,
+      autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        contextIsolation: false,
+        backgroundThrottling: false
       }
     })
     remoteMain.enable(scoreboardWindow.webContents)
+
+    if (env.name !== 'development') {
+      const primary = screen.getPrimaryDisplay()
+      const secondDisplay = screen.getAllDisplays().find(function (d) { return d.id !== primary.id })
+      if (secondDisplay) {
+        scoreboardWindow.setBounds(secondDisplay.bounds)
+        scoreboardWindow.setFullScreen(true)
+      }
+    }
 
     scoreboardWindow.loadURL(
       url.format({
@@ -332,7 +350,8 @@ function createUpdateWindow () {
       height: 300,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        contextIsolation: false,
+        backgroundThrottling: false
       }
     })
     remoteMain.enable(updateWindow.webContents)
@@ -363,7 +382,8 @@ function createSettingsWindow () {
       frame: false,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        contextIsolation: false,
+        backgroundThrottling: false
       }
     })
     remoteMain.enable(settingsWindow.webContents)
@@ -393,7 +413,8 @@ function createPhotoSettingsWindow () {
       frame: true,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        contextIsolation: false,
+        backgroundThrottling: false
       }
     })
     remoteMain.enable(photosettingsWindow.webContents)
@@ -423,7 +444,8 @@ function createShareAppSettingsWindow () {
       frame: true,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        contextIsolation: false,
+        backgroundThrottling: false
       }
 
     })
@@ -454,7 +476,8 @@ function createBoothSettingsWindow () {
       frame: true,
       webPreferences: {
         nodeIntegration: true,
-        contextIsolation: false
+        contextIsolation: false,
+        backgroundThrottling: false
       }
 
     })
