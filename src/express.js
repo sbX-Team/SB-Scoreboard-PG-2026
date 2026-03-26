@@ -6,6 +6,12 @@
     const app = express()
     var server = require('http').Server(app)
     var io = require('socket.io')(server)
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', '*')
+      res.header('Access-Control-Allow-Methods', 'GET, POST')
+      res.header('Access-Control-Allow-Headers', 'Content-Type')
+      next()
+    })
     app.use(express.json()) // for parsing application/json
     app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
     app.set('view engine', 'ejs')

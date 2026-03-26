@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+  <title>Control Panel</title>
+  <link rel="stylesheet" href="/expressassets/css/bootstrap.min.css">
+  <style>
+    :root {
+      --sbx-black: #211f20;
+      --sbx-grey:  #e8e8e8;
+      --sbx-white: #ffffff;
+      --sbx-blue:  #00acd4;
+      --sbx-dark:  #181617;
+      --sbx-card:  #2c2a2b;
+    }
+    body {
+      background-color: var(--sbx-black);
+      color: var(--sbx-white);
+      font-family: sans-serif;
+    }
+    h5 {
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--sbx-blue);
+      margin-bottom: 0.75rem;
+    }
+    .sbx-card {
+      background-color: var(--sbx-card);
+      border: 1px solid #3a3839;
+      border-radius: 4px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .sbx-card p {
+      margin-bottom: 0.35rem;
+      font-size: 0.875rem;
+      color: var(--sbx-grey);
+    }
+    .sbx-card p strong {
+      color: var(--sbx-white);
+    }
+    .sbx-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #888;
+      margin-bottom: 0.15rem;
+    }
+    a { color: var(--sbx-blue); }
+    a:hover { color: #33c4e0; }
+    .btn-sbx-primary {
+      background-color: var(--sbx-blue);
+      color: var(--sbx-black);
+      border: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.4rem 1rem;
+    }
+    .btn-sbx-primary:hover { background-color: #33c4e0; color: var(--sbx-black); }
+    .btn-sbx-secondary {
+      background-color: transparent;
+      color: var(--sbx-grey);
+      border: 1px solid #555;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.4rem 1rem;
+    }
+    .btn-sbx-secondary:hover { border-color: var(--sbx-blue); color: var(--sbx-blue); }
+    .btn-sbx-danger {
+      background-color: transparent;
+      color: #e05555;
+      border: 1px solid #e05555;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.35rem 0.85rem;
+    }
+    .btn-sbx-danger:hover { background-color: #e05555; color: var(--sbx-white); }
+    .btn-sbx-success {
+      background-color: transparent;
+      color: #4caf7d;
+      border: 1px solid #4caf7d;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-radius: 2px;
+      padding: 0.35rem 0.85rem;
+    }
+    .btn-sbx-success:hover { background-color: #4caf7d; color: var(--sbx-black); }
+    #log {
+      background-color: var(--sbx-dark);
+      border: 1px solid #3a3839;
+      border-radius: 4px;
+      padding: 0.75rem 1rem;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #aaa;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    .divider { border-top: 1px solid #3a3839; margin: 1rem 0; }
+    .relay-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .section-header {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+    .action-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.75rem; }
+    .feedback {
+      font-size: 0.7rem;
+      color: #4caf7d;
+      margin-left: 0.5rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <%- include('menu') %>
+
+  <div class="container" style="max-width:680px; padding-top:1.5rem;">
+
+    <!-- Header -->
+    <div style="display:flex; align-items:center; margin-bottom:1.5rem;">
+      <div style="width:6px; height:28px; background:var(--sbx-blue); border-radius:2px; margin-right:0.75rem;"></div>
+      <div>
+        <div style="font-size:1rem; font-weight:700; letter-spacing:0.05em; color:var(--sbx-white);">BOA Scoreboard</div>
+        <div style="font-size:0.7rem; color:#888; text-transform:uppercase; letter-spacing:0.08em;">Web Control Panel</div>
+      </div>
+    </div>
+
+    <!-- Server -->
+    <div class="sbx-card">
+      <h5>Server</h5>
+      <div class="sbx-label">Listening on</div>
+      <div style="font-size:0.85rem;"><a id="serverLink" href="#"></a></div>
+      <div class="action-row" style="margin-top:0.75rem;">
+        <button class="btn btn-sbx-danger" id="closeScoreboard">Close Scoreboard</button>
+        <span class="feedback" id="fbClose">Sent</span>
+      </div>
+    </div>
+
+    <!-- Small Business Take Over -->
+    <div class="sbx-card">
+      <h5>Small Business Take Over</h5>
+      <p><span style="color:#888">Schedule:</span> <strong id="sbTakeoverTimesDisplay">—</strong></p>
+      <p><span style="color:#888">Duration:</span> <strong id="sbTakeoverDurationDisplay">—</strong>s</p>
+      <div class="action-row">
+        <button class="btn btn-sbx-primary" id="triggerSbTakeover">Trigger Now</button>
+        <span class="feedback" id="fbSbto">Triggered</span>
+      </div>
+    </div>
+
+    <!-- Bus Take Over -->
+    <div class="sbx-card">
+      <h5>Bus Take Over</h5>
+      <p><span style="color:#888">Schedule:</span> <strong id="busTakeoverTimesDisplay">—</strong></p>
+      <p><span style="color:#888">Relay Serial:</span> <strong id="busRelaySerialDisplay">—</strong></p>
+      <p><span style="color:#888">Mode:</span> <strong id="busTakeoverModeDisplay">—</strong></p>
+      <p><span style="color:#888">Volume:</span> <strong id="busVolumeDisplay">—</strong></p>
+      <div class="action-row">
+        <button class="btn btn-sbx-primary" id="triggerBusTakeover">Trigger Now</button>
+        <span class="feedback" id="fbBus">Triggered</span>
+      </div>
+      <div class="divider"></div>
+      <div class="section-header">Relay Controls</div>
+      <div class="relay-row">
+        <button class="btn btn-sbx-success" id="busRelay1On">Relay 1 On</button>
+        <button class="btn btn-sbx-danger" id="busRelay1Off">Relay 1 Off</button>
+        <button class="btn btn-sbx-success" id="busRelay2On">Relay 2 On</button>
+        <button class="btn btn-sbx-danger" id="busRelay2Off">Relay 2 Off</button>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="sbx-card">
+      <h5>Log</h5>
+      <div id="log"></div>
+    </div>
+
+    <br /><br />
+  </div>
+
+  <script src="/expressassets/js/jquery-3.4.1.min.js"></script>
+  <script src="/expressassets/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io(window.location.host)
+
+    // Live log via socket.io
+    socket.on('log', function (message) {
+      var $log = $('#log')
+      $log.prepend('<span><br />' + message + '</span>')
+      var spans = $log.find('span')
+      if (spans.length > 100) spans.last().remove()
+    })
+
+    // Load settings on page load
+    var host = window.location.host
+    var serverUrl = 'http://' + host
+    $('#serverLink').attr('href', serverUrl).text(serverUrl)
+
+    fetch('/api/controlsettings')
+      .then(function (r) { return r.json() })
+      .then(function (s) {
+        $('#sbTakeoverTimesDisplay').text(s.sbTakeoverTimes && s.sbTakeoverTimes.length ? s.sbTakeoverTimes.join(', ') : '—')
+        $('#sbTakeoverDurationDisplay').text(s.sbTakeoverDuration || '—')
+        $('#busTakeoverTimesDisplay').text(s.busTakeoverTimes && s.busTakeoverTimes.length ? s.busTakeoverTimes.join(', ') : '—')
+        $('#busRelaySerialDisplay').text(s.busRelaySerial || '—')
+        $('#busTakeoverModeDisplay').text(s.busTakeoverMode === 'highscore' ? 'New High Score' : 'Timer')
+        $('#busVolumeDisplay').text(Math.round((s.busAudioVolume || 1) * 100) + '%')
+      })
+
+    function flashFeedback (id) {
+      var $el = $('#' + id)
+      $el.show()
+      setTimeout(function () { $el.fadeOut(400) }, 1500)
+    }
+
+    function apiGet (url, fbId) {
+      fetch(url).then(function (r) { return r.json() }).then(function () {
+        if (fbId) flashFeedback(fbId)
+      })
+    }
+
+    // Debounce helper (leading edge)
+    function debounce (fn, wait) {
+      var timer = null
+      return function () {
+        if (!timer) { fn(); timer = setTimeout(function () { timer = null }, wait) }
+      }
+    }
+
+    $('#closeScoreboard').on('click', function () { apiGet('/closescoreboard', 'fbClose') })
+    $('#triggerSbTakeover').on('click', debounce(function () { apiGet('/triggersbtakeover', 'fbSbto') }, 3000))
+    $('#triggerBusTakeover').on('click', debounce(function () { apiGet('/triggerbustakeover', 'fbBus') }, 5000))
+    $('#busRelay1On').on('click', function () { apiGet('/relay/1/on') })
+    $('#busRelay1Off').on('click', function () { apiGet('/relay/1/off') })
+    $('#busRelay2On').on('click', function () { apiGet('/relay/2/on') })
+    $('#busRelay2Off').on('click', function () { apiGet('/relay/2/off') })
+  </script>
+</body>
+</html>

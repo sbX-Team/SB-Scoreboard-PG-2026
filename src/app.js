@@ -497,6 +497,48 @@ server.app.post('/updatescore', function (req, res) {
   // res.render('registration', { title: 'Settings', subtitle: '', ip: ip + ':3000' })
 })
 
+server.app.get('/controlpanel', function (_req, res) {
+  res.render('controlpanel', { title: 'Control Panel', ip: ip + ':5000' })
+})
+
+server.app.get('/api/controlsettings', function (_req, res) {
+  res.json({
+    sbTakeoverTimes: sbTakeoverTimes,
+    sbTakeoverDuration: sbTakeoverDuration,
+    busTakeoverTimes: busTakeoverTimes,
+    busRelaySerial: busRelaySerialNumber,
+    busTakeoverMode: busTakeoverMode,
+    busAudioVolume: busAudioVolume
+  })
+})
+
+server.app.get('/triggersbtakeover', function (_req, res) {
+  ipcRenderer.send('sbTakeoverStart', { duration: sbTakeoverDuration })
+  res.json({ result: 'success', message: 'SBTO triggered' })
+})
+
+server.app.get('/triggerbustakeover', function (_req, res) {
+  runBusTakeover()
+  res.json({ result: 'success', message: 'Bus takeover triggered' })
+})
+
+server.app.get('/relay/:channel/on', function (req, res) {
+  var ch = req.params.channel === '1' ? '01' : '02'
+  relayOn(ch)
+  res.json({ result: 'success', message: 'Relay ' + req.params.channel + ' ON' })
+})
+
+server.app.get('/relay/:channel/off', function (req, res) {
+  var ch = req.params.channel === '1' ? '01' : '02'
+  relayOff(ch)
+  res.json({ result: 'success', message: 'Relay ' + req.params.channel + ' OFF' })
+})
+
+server.app.get('/closescoreboard', function (_req, res) {
+  ipcRenderer.send('closeScoreboard')
+  res.json({ result: 'success', message: 'Scoreboard closed' })
+})
+
 server.app.get('/seeddata', function (_req, res) {
   db.find({ placeholder: true }, function (err, existing) {
     if (err) {
@@ -708,6 +750,7 @@ $(function () {
     console.log('Are you sure you want to update?')
   })
   ipcRenderer.on('log', (_event, message) => {
+    server.io.emit('log', message)
     $('#log').prepend(`<span><br />${message}</span>`)
     console.log($('#log > span').length)
     if ($('#log > span').length > 100) {
