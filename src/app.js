@@ -110,6 +110,14 @@ function runBusTakeover () {
   }, busMp3Delay)
 }
 
+function updateLeaderboardCounts () {
+  db.count({ score: { $exists: true }, deleted: 0 }, function (err, count) {
+    if (!err) {
+      $('#leaderboardTotalDisplay').text(count)
+    }
+  })
+}
+
 function updateSbTakeoverDisplay () {
   $('#sbTakeoverTimesDisplay').text(sbTakeoverTimes.length ? sbTakeoverTimes.join(', ') : '—')
   $('#sbTakeoverDurationDisplay').text(sbTakeoverDuration)
@@ -256,6 +264,7 @@ server.app.get('/delete', function (req, res) {
     if (err) {
       log.info(err)
     } else {
+      updateLeaderboardCounts()
       res.redirect(301, '/admin')
     }
   })
@@ -278,6 +287,7 @@ server.app.get('/deleteall2', function (req, res) {
     if (err) {
       log.info(err)
     } else {
+      updateLeaderboardCounts()
       res.redirect(302, '/admin')
     }
   })
@@ -478,6 +488,7 @@ server.app.post('/updatescore', function (req, res) {
                 console.log(docs)
                 server.io.emit('updateScore', { updatedScore: doc[0], leaderboard: docs })
                 ipcRenderer.send('updateScore', { updatedScore: doc[0], leaderboard: docs })
+                updateLeaderboardCounts()
                 res.json({ result: 'success', message: 'Score Update' })
                 log.info('Guest Score - Delay the stock player')
                 // clearTimeout(stockPlayerTimeout)
@@ -597,6 +608,7 @@ server.app.post('/insertscore', function (req, res) {
           // }, delayBetweenStockPlayers);
           server.io.emit('updateScore', { updatedScore: newDoc, leaderboard: docs })
           ipcRenderer.send('updateScore', { updatedScore: newDoc, leaderboard: docs })
+          updateLeaderboardCounts()
           res.json({ result: 'success', message: 'Score Update' })
         }
       })
@@ -646,6 +658,7 @@ $(document).ready(function () {
     console.log('Scoreboard Settings:', scoreboardSettings)
     updateSbTakeoverDisplay()
     updateBusTakeoverDisplay()
+    updateLeaderboardCounts()
   })
 
   setInterval(function () {
