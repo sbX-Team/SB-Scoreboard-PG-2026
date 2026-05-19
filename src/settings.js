@@ -31,6 +31,10 @@ $(function () {
     $('#busRelay2Delay').val(settings.busRelay2Delay || 0);
     $('#busRelay2OnTime').val(settings.busRelay2OnTime || 1000);
     $('#busMp3Delay').val(settings.busMp3Delay || 0);
+    $('#dmxPort').val(settings.dmxPort || '');
+    $('#dmxChannel').val(settings.dmxChannel || 1);
+    $('#dmxCannonOnValue').val(settings.dmxCannonOnValue !== undefined ? settings.dmxCannonOnValue : 255);
+    $('#dmxCannonOffValue').val(settings.dmxCannonOffValue !== undefined ? settings.dmxCannonOffValue : 0);
 
     console.log(settings);
   });

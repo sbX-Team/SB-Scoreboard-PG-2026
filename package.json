@@ -63,6 +63,7 @@
     "popper.js": "^1.14.3",
     "request": "^2.88.0",
     "sharp": "^0.33.0",
+    "serialport": "^12.0.0",
     "socket.io": "^4.5.4",
     "sweetalert2": "^9.10.12",
     "underscore": "^1.13.1",

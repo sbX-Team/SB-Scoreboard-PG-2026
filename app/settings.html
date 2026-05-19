@@ -170,6 +170,42 @@
         </div>
     </div>
 
+    <div class='row settingfield'>
+        <div class="col-md-12"><hr /><h4>DMX Cannon</h4></div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='dmxPort'>DMX Port</label>
+          <input type='text' name='dmxPort' id='dmxPort' class='form-control' style='width:200px' placeholder='COM3'>
+          <p class="field-desc">Serial port for the Enttec USB DMX Pro adapter. Leave blank to disable DMX.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='dmxChannel'>Channel</label>
+          <input type='number' name='dmxChannel' id='dmxChannel' class='form-control' style='width:200px' placeholder='1'>
+          <p class="field-desc">DMX channel number (1–512) to send cannon commands on.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='dmxCannonOnValue'>Cannon On Value</label>
+          <input type='number' name='dmxCannonOnValue' id='dmxCannonOnValue' class='form-control' style='width:200px' placeholder='255'>
+          <p class="field-desc">DMX value (0–255) sent when the cannon is turned on.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='dmxCannonOffValue'>Cannon Off Value</label>
+          <input type='number' name='dmxCannonOffValue' id='dmxCannonOffValue' class='form-control' style='width:200px' placeholder='0'>
+          <p class="field-desc">DMX value (0–255) sent when the cannon is turned off.</p>
+        </div>
+    </div>
+
     <div class='row settingfield' style="margin-top:1rem;">
         <div class="col-xs-4">
           <input type='button' class='btn btn-primary' value='Save Settings' id='savesettings'>

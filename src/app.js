@@ -52,6 +52,13 @@ let busTakeoverMode = 'timer'     // 'timer' | 'highscore'
 let busHighScoreCooldown = 60     // seconds
 let busLastHighScoreTrigger = 0   // Date.now() ms timestamp
 
+let dmxPort = ''
+let dmxChannel = 1
+let dmxCannonOnValue = 255
+let dmxCannonOffValue = 0
+let dmxConnected = false
+let dmxUniverse = null
+
 function parseSbTakeoverTimes (str) {
   if (!str) return []
   return str.split(',').map(function (s) {
@@ -129,6 +136,66 @@ function updateBusTakeoverDisplay () {
   $('#busTakeoverModeDisplay').text(busTakeoverMode === 'highscore' ? 'New High Score' : 'Timer')
   $('#busVolumeSlider').val(busAudioVolume)
   $('#busVolumeDisplay').text(Math.round(busAudioVolume * 100) + '%')
+}
+
+function updateDmxStatusDisplay () {
+  $('#dmxStatusDisplay').text(dmxConnected ? 'Connected (' + dmxPort + ')' : 'Not connected')
+}
+
+function initDMX () {
+  if (dmxUniverse) {
+    try { dmxUniverse.close() } catch (_) {}
+    dmxUniverse = null
+  }
+  dmxConnected = false
+  updateDmxStatusDisplay()
+  if (!dmxPort || dmxPort.trim() === '') return
+  try {
+    const { SerialPort } = require('serialport')
+    dmxUniverse = new SerialPort({ path: dmxPort.trim(), baudRate: 57600, dataBits: 8, stopBits: 1, parity: 'none' })
+    dmxUniverse.on('open', function () {
+      dmxConnected = true
+      log.info('DMX connected on ' + dmxPort)
+      updateDmxStatusDisplay()
+    })
+    dmxUniverse.on('error', function (err) {
+      dmxConnected = false
+      log.info('DMX error: ' + err.message)
+      updateDmxStatusDisplay()
+    })
+    dmxUniverse.on('close', function () {
+      dmxConnected = false
+      updateDmxStatusDisplay()
+    })
+  } catch (err) {
+    log.info('DMX init error: ' + err.message)
+    updateDmxStatusDisplay()
+  }
+}
+
+function sendDmxPacket (channel, value) {
+  if (!dmxConnected || !dmxUniverse) { log.info('DMX: not connected'); return }
+  var channelData = Buffer.alloc(512, 0)
+  channelData[channel - 1] = value
+  var dataLength = channelData.length + 1
+  var packet = Buffer.concat([
+    Buffer.from([0x7E, 0x06, dataLength & 0xFF, (dataLength >> 8) & 0xFF, 0x00]),
+    channelData,
+    Buffer.from([0xE7])
+  ])
+  dmxUniverse.write(packet, function (err) {
+    if (err) log.info('DMX write error: ' + err.message)
+  })
+}
+
+function cannonOn () {
+  sendDmxPacket(dmxChannel, dmxCannonOnValue)
+  log.info('DMX cannon ON (ch ' + dmxChannel + ' = ' + dmxCannonOnValue + ')')
+}
+
+function cannonOff () {
+  sendDmxPacket(dmxChannel, dmxCannonOffValue)
+  log.info('DMX cannon OFF (ch ' + dmxChannel + ' = ' + dmxCannonOffValue + ')')
 }
 
 var Datastore = require('nedb')
@@ -654,10 +721,18 @@ $(document).ready(function () {
       if (isNaN(busAudioVolume) || busAudioVolume < 0 || busAudioVolume > 1) busAudioVolume = 1
       busTakeoverMode = settings.settings.busTakeoverMode || 'timer'
       busHighScoreCooldown = parseInt(settings.settings.busHighScoreCooldown) || 60
+      dmxPort = settings.settings.dmxPort || ''
+      dmxChannel = parseInt(settings.settings.dmxChannel) || 1
+      dmxCannonOnValue = parseInt(settings.settings.dmxCannonOnValue)
+      if (isNaN(dmxCannonOnValue)) dmxCannonOnValue = 255
+      dmxCannonOffValue = parseInt(settings.settings.dmxCannonOffValue)
+      if (isNaN(dmxCannonOffValue)) dmxCannonOffValue = 0
+      initDMX()
     }
     console.log('Scoreboard Settings:', scoreboardSettings)
     updateSbTakeoverDisplay()
     updateBusTakeoverDisplay()
+    updateDmxStatusDisplay()
     updateLeaderboardCounts()
   })
 
@@ -696,6 +771,13 @@ $(document).ready(function () {
     busTakeoverMode = config.busTakeoverMode || 'timer'
     busHighScoreCooldown = parseInt(config.busHighScoreCooldown) || 60
     updateBusTakeoverDisplay()
+    dmxPort = config.dmxPort || ''
+    dmxChannel = parseInt(config.dmxChannel) || 1
+    dmxCannonOnValue = parseInt(config.dmxCannonOnValue)
+    if (isNaN(dmxCannonOnValue)) dmxCannonOnValue = 255
+    dmxCannonOffValue = parseInt(config.dmxCannonOffValue)
+    if (isNaN(dmxCannonOffValue)) dmxCannonOffValue = 0
+    initDMX()
   })
 
   ipcRenderer.on('busHighScoreTrigger', function () {
@@ -728,6 +810,9 @@ $(function () {
   $('#busRelay1Off').on('click', function () { relayOff('01') })
   $('#busRelay2On').on('click', function () { relayOn('02') })
   $('#busRelay2Off').on('click', function () { relayOff('02') })
+
+  $('#dmxCannonOn').on('click', function () { cannonOn() })
+  $('#dmxCannonOff').on('click', function () { cannonOff() })
 
   $('#busMusicTest').on('click', function () {
     if (busAudio && !busAudio.paused) {

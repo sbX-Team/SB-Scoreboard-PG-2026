@@ -8,7 +8,9 @@
       "Bash(npx electron-builder:*)",
       "Bash(npm start:*)",
       "Bash(xargs grep:*)",
-      "Bash(node build-icon.js)"
+      "Bash(node build-icon.js)",
+      "Bash(findstr \"serialport\")",
+      "Bash(./node_modules/.bin/electron-builder install-app-deps *)"
     ]
   }
 }
