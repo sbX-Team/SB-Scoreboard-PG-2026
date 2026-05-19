@@ -56,8 +56,13 @@ let dmxPort = ''
 let dmxChannel = 1
 let dmxCannonOnValue = 255
 let dmxCannonOffValue = 0
+let dmxCannonAutoOff = 0
 let dmxConnected = false
 let dmxUniverse = null
+let dmxAutoOffTimer = null
+let dmxTestMode = false
+let dmxTestTimer = null
+let dmxTestCount = 0
 
 function parseSbTakeoverTimes (str) {
   if (!str) return []
@@ -189,13 +194,51 @@ function sendDmxPacket (channel, value) {
 }
 
 function cannonOn () {
+  if (dmxAutoOffTimer) { clearTimeout(dmxAutoOffTimer); dmxAutoOffTimer = null }
   sendDmxPacket(dmxChannel, dmxCannonOnValue)
   log.info('DMX cannon ON (ch ' + dmxChannel + ' = ' + dmxCannonOnValue + ')')
+  if (dmxCannonAutoOff > 0) {
+    dmxAutoOffTimer = setTimeout(function () {
+      dmxAutoOffTimer = null
+      sendDmxPacket(dmxChannel, dmxCannonOffValue)
+      log.info('DMX cannon auto-OFF')
+    }, dmxCannonAutoOff)
+  }
 }
 
 function cannonOff () {
+  if (dmxAutoOffTimer) { clearTimeout(dmxAutoOffTimer); dmxAutoOffTimer = null }
   sendDmxPacket(dmxChannel, dmxCannonOffValue)
   log.info('DMX cannon OFF (ch ' + dmxChannel + ' = ' + dmxCannonOffValue + ')')
+}
+
+function runCannonTestCycle () {
+  if (!dmxTestMode) return
+  dmxTestCount++
+  sendDmxPacket(dmxChannel, dmxCannonOnValue)
+  log.info('DMX test: cannon ON (#' + dmxTestCount + ')')
+  var onDuration = dmxCannonAutoOff > 0 ? dmxCannonAutoOff : 1000
+  dmxTestTimer = setTimeout(function () {
+    if (!dmxTestMode) return
+    sendDmxPacket(dmxChannel, dmxCannonOffValue)
+    log.info('DMX test: cannon OFF (#' + dmxTestCount + ')')
+    dmxTestTimer = setTimeout(runCannonTestCycle, 5000)
+  }, onDuration)
+}
+
+function startCannonTest () {
+  dmxTestMode = true
+  dmxTestCount = 0
+  $('#dmxTestToggle').text('Stop Test')
+  runCannonTestCycle()
+}
+
+function stopCannonTest () {
+  dmxTestMode = false
+  if (dmxTestTimer) { clearTimeout(dmxTestTimer); dmxTestTimer = null }
+  sendDmxPacket(dmxChannel, dmxCannonOffValue)
+  log.info('DMX test stopped')
+  $('#dmxTestToggle').text('Test Mode')
 }
 
 var Datastore = require('nedb')
@@ -727,6 +770,7 @@ $(document).ready(function () {
       if (isNaN(dmxCannonOnValue)) dmxCannonOnValue = 255
       dmxCannonOffValue = parseInt(settings.settings.dmxCannonOffValue)
       if (isNaN(dmxCannonOffValue)) dmxCannonOffValue = 0
+      dmxCannonAutoOff = parseInt(settings.settings.dmxCannonAutoOff) || 0
       initDMX()
     }
     console.log('Scoreboard Settings:', scoreboardSettings)
@@ -777,6 +821,7 @@ $(document).ready(function () {
     if (isNaN(dmxCannonOnValue)) dmxCannonOnValue = 255
     dmxCannonOffValue = parseInt(config.dmxCannonOffValue)
     if (isNaN(dmxCannonOffValue)) dmxCannonOffValue = 0
+    dmxCannonAutoOff = parseInt(config.dmxCannonAutoOff) || 0
     initDMX()
   })
 
@@ -813,6 +858,9 @@ $(function () {
 
   $('#dmxCannonOn').on('click', function () { cannonOn() })
   $('#dmxCannonOff').on('click', function () { cannonOff() })
+  $('#dmxTestToggle').on('click', function () {
+    if (dmxTestMode) { stopCannonTest() } else { startCannonTest() }
+  })
 
   $('#busMusicTest').on('click', function () {
     if (busAudio && !busAudio.paused) {

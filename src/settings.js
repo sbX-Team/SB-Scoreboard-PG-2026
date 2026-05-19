@@ -35,6 +35,7 @@ $(function () {
     $('#dmxChannel').val(settings.dmxChannel || 1);
     $('#dmxCannonOnValue').val(settings.dmxCannonOnValue !== undefined ? settings.dmxCannonOnValue : 255);
     $('#dmxCannonOffValue').val(settings.dmxCannonOffValue !== undefined ? settings.dmxCannonOffValue : 0);
+    $('#dmxCannonAutoOff').val(settings.dmxCannonAutoOff || 0);
 
     console.log(settings);
   });
