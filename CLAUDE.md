@@ -106,6 +106,30 @@ Settings fields:
 → `src/background.js` relays to `mainWindow`
 → `src/app.js` checks mode + cooldown → `runBusTakeover()`
 
+### DMX Controls (Cannon + Fans)
+
+Two DMX fixtures are controlled via a single **Enttec USB DMX Pro** adapter. Uses `serialport` 12.x (`@serialport/bindings-cpp` — NAPI-based, Electron-version-agnostic). The `dmx` npm package was explicitly **not** used because it depends on `@serialport/bindings@8.x` which has no prebuilt binary for Electron 33 and fails to compile on this machine.
+
+The Enttec USB DMX Pro framing protocol is implemented directly in `src/app.js` (`sendDmxPacket`):
+- Open serial port at 57600 baud, 8N1
+- Packet format: `0x7E 0x06 [dataLen LSB] [dataLen MSB] 0x00 [512 channel bytes] 0xE7`
+
+**Cannon** settings fields:
+- `dmxPort` — serial port for the adapter (e.g. `COM3`); blank = DMX disabled
+- `dmxChannel` — DMX channel number (1–512)
+- `dmxCannonOnValue` — DMX value (0–255) sent on Cannon On (default 255)
+- `dmxCannonOffValue` — DMX value (0–255) sent on Cannon Off (default 0)
+- `dmxCannonAutoOff` — ms after Cannon On before automatically sending Cannon Off; `0` = disabled
+
+**Cannon test mode** cycles: On → `autoOff` ms (min 1000) → Off → 5 s → repeat, logging a fire count (`#N`) each cycle. Counter resets on each start. Implemented via `runCannonTestCycle()` / `startCannonTest()` / `stopCannonTest()`.
+
+**Fans** settings fields (same port, no auto-off):
+- `dmxFanChannel` — DMX channel number (1–512)
+- `dmxFanOnValue` — DMX value (0–255) sent on Fans On (default 255)
+- `dmxFanOffValue` — DMX value (0–255) sent on Fans Off (default 0)
+
+`app.html` has a **DMX Cannon** card (status, On/Off, Test Mode toggle) and a **DMX Fans** card (On/Off). Both share the same serial port; the port is re-opened whenever settings are saved.
+
 ### Scoreboard Display (`app/scoreboard.html` + `src/scoreboard.js`)
 
 - Leaderboard renders up to 24 entries across two side-by-side tables (`#leaderboard1`, `#leaderboard2`), 3 rows each, cycling pages every `cycleInterval` ms when > 6 entries.

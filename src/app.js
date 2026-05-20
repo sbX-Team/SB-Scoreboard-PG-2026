@@ -64,6 +64,10 @@ let dmxTestMode = false
 let dmxTestTimer = null
 let dmxTestCount = 0
 
+let dmxFanChannel = 2
+let dmxFanOnValue = 255
+let dmxFanOffValue = 0
+
 function parseSbTakeoverTimes (str) {
   if (!str) return []
   return str.split(',').map(function (s) {
@@ -210,6 +214,16 @@ function cannonOff () {
   if (dmxAutoOffTimer) { clearTimeout(dmxAutoOffTimer); dmxAutoOffTimer = null }
   sendDmxPacket(dmxChannel, dmxCannonOffValue)
   log.info('DMX cannon OFF (ch ' + dmxChannel + ' = ' + dmxCannonOffValue + ')')
+}
+
+function fanOn () {
+  sendDmxPacket(dmxFanChannel, dmxFanOnValue)
+  log.info('DMX fans ON (ch ' + dmxFanChannel + ' = ' + dmxFanOnValue + ')')
+}
+
+function fanOff () {
+  sendDmxPacket(dmxFanChannel, dmxFanOffValue)
+  log.info('DMX fans OFF (ch ' + dmxFanChannel + ' = ' + dmxFanOffValue + ')')
 }
 
 function runCannonTestCycle () {
@@ -771,6 +785,10 @@ $(document).ready(function () {
       dmxCannonOffValue = parseInt(settings.settings.dmxCannonOffValue)
       if (isNaN(dmxCannonOffValue)) dmxCannonOffValue = 0
       dmxCannonAutoOff = parseInt(settings.settings.dmxCannonAutoOff) || 0
+      dmxFanChannel = parseInt(settings.settings.dmxFanChannel) || 2
+      dmxFanOnValue = parseInt(settings.settings.dmxFanOnValue)
+      if (isNaN(dmxFanOnValue)) dmxFanOnValue = 255
+      dmxFanOffValue = parseInt(settings.settings.dmxFanOffValue) || 0
       initDMX()
     }
     console.log('Scoreboard Settings:', scoreboardSettings)
@@ -822,6 +840,10 @@ $(document).ready(function () {
     dmxCannonOffValue = parseInt(config.dmxCannonOffValue)
     if (isNaN(dmxCannonOffValue)) dmxCannonOffValue = 0
     dmxCannonAutoOff = parseInt(config.dmxCannonAutoOff) || 0
+    dmxFanChannel = parseInt(config.dmxFanChannel) || 2
+    dmxFanOnValue = parseInt(config.dmxFanOnValue)
+    if (isNaN(dmxFanOnValue)) dmxFanOnValue = 255
+    dmxFanOffValue = parseInt(config.dmxFanOffValue) || 0
     initDMX()
   })
 
@@ -858,6 +880,8 @@ $(function () {
 
   $('#dmxCannonOn').on('click', function () { cannonOn() })
   $('#dmxCannonOff').on('click', function () { cannonOff() })
+  $('#dmxFanOn').on('click', function () { fanOn() })
+  $('#dmxFanOff').on('click', function () { fanOff() })
   $('#dmxTestToggle').on('click', function () {
     if (dmxTestMode) { stopCannonTest() } else { startCannonTest() }
   })

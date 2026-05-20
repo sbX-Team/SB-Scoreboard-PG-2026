@@ -214,6 +214,34 @@
         </div>
     </div>
 
+    <div class='row settingfield'>
+        <div class="col-md-12"><hr /><h4>DMX Fans</h4></div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='dmxFanChannel'>Channel</label>
+          <input type='number' name='dmxFanChannel' id='dmxFanChannel' class='form-control' style='width:200px' placeholder='2'>
+          <p class="field-desc">DMX channel number (1–512) for the fans.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='dmxFanOnValue'>Fan On Value</label>
+          <input type='number' name='dmxFanOnValue' id='dmxFanOnValue' class='form-control' style='width:200px' placeholder='255'>
+          <p class="field-desc">DMX value (0–255) sent when the fans are turned on.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='dmxFanOffValue'>Fan Off Value</label>
+          <input type='number' name='dmxFanOffValue' id='dmxFanOffValue' class='form-control' style='width:200px' placeholder='0'>
+          <p class="field-desc">DMX value (0–255) sent when the fans are turned off.</p>
+        </div>
+    </div>
+
     <div class='row settingfield' style="margin-top:1rem;">
         <div class="col-xs-4">
           <input type='button' class='btn btn-primary' value='Save Settings' id='savesettings'>

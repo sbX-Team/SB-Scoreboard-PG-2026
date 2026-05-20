@@ -36,6 +36,9 @@ $(function () {
     $('#dmxCannonOnValue').val(settings.dmxCannonOnValue !== undefined ? settings.dmxCannonOnValue : 255);
     $('#dmxCannonOffValue').val(settings.dmxCannonOffValue !== undefined ? settings.dmxCannonOffValue : 0);
     $('#dmxCannonAutoOff').val(settings.dmxCannonAutoOff || 0);
+    $('#dmxFanChannel').val(settings.dmxFanChannel || 2);
+    $('#dmxFanOnValue').val(settings.dmxFanOnValue !== undefined ? settings.dmxFanOnValue : 255);
+    $('#dmxFanOffValue').val(settings.dmxFanOffValue !== undefined ? settings.dmxFanOffValue : 0);
 
     console.log(settings);
   });
