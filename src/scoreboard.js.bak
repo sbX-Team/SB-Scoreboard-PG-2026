@@ -47,9 +47,6 @@ ipcRenderer.on('initialLeaderboard', function (event, data) {
 
 ipcRenderer.on('sbTakeoverStart', function (event, data) {
   var duration = (data && data.duration) ? data.duration * 1000 : sbTakeoverDuration * 1000
-  if (data && data.image) {
-    document.querySelector('#sbTakeover img').src = 'file:///' + data.image
-  }
   sbTakeoverActive = true
   if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
   $('#sbTakeover').velocity('transition.fadeIn', {
@@ -62,7 +59,7 @@ ipcRenderer.on('sbTakeoverStart', function (event, data) {
             sbTakeoverActive = false
             if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
             renderPage(currentPage, true)
-            if (currentLeaderboard.length > 4) {
+            if (currentLeaderboard.length > 6) {
               cycleTimer = setInterval(nextPage, cycleInterval)
             }
           }
@@ -102,20 +99,16 @@ function checkScores () {
 
 function showScore (scoreboard, speed, nickname) {
   console.log('Show Score')
-  var isTopScore = scoreboard.length > 0 && scoreboard[0].score === speed
   if (scoreboard.slice(0, 3).some(function (e) { return e.score === speed })) {
     ipcRenderer.send('busHighScoreTrigger')
   }
   if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
 
-  var formattedNickname = (nickname || '').toUpperCase()
-  var $overlay = isTopScore ? $('#newHighScore') : $('#newScore')
-  var nameId = isTopScore ? 'newHighScoreName' : 'newScoreName'
-  var textId = isTopScore ? 'newHighScoreText' : 'newScoreText'
-  document.getElementById(nameId).innerHTML = isTopScore ? formattedNickname : formattedNickname + "'s SCORE"
-  document.getElementById(textId).innerHTML = speed
+  var formattedNickname = (nickname || '').toUpperCase().split('').join('.') + '.'
+  document.getElementById('newScoreName').innerHTML = formattedNickname + "'s SCORE"
+  document.getElementById('newScoreText').innerHTML = speed
 
-  $overlay.velocity('transition.fadeIn', {
+  $('#newScore').velocity('transition.fadeIn', {
     duration: 800,
     complete: function () {
       // Update data only — overlay is covering the leaderboard, no render needed yet
@@ -126,11 +119,11 @@ function showScore (scoreboard, speed, nickname) {
       setTimeout(function () {
         currentPage = 0
         renderPage(0, true)
-        $overlay.velocity('transition.fadeOut', {
+        $('#newScore').velocity('transition.fadeOut', {
           duration: 800,
           complete: function () {
             if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
-            if (!sbTakeoverActive && currentLeaderboard.length > 4) {
+            if (!sbTakeoverActive && currentLeaderboard.length > 6) {
               cycleTimer = setInterval(nextPage, cycleInterval)
             }
             checkScores()
@@ -206,13 +199,13 @@ function updateLeaderboard (leaderboard) {
   if (cycleTimer) clearInterval(cycleTimer)
   currentPage = 0
   renderPage(0)
-  if (currentLeaderboard.length > 4) {
+  if (currentLeaderboard.length > 6) {
     cycleTimer = setInterval(nextPage, cycleInterval)
   }
 }
 
 function nextPage () {
-  var pages = Math.ceil(currentLeaderboard.length / 4)
+  var pages = Math.ceil(currentLeaderboard.length / 6)
   if (pages <= 1) return
   currentPage = (currentPage + 1) % pages
   renderPage(currentPage)
@@ -220,27 +213,37 @@ function nextPage () {
 
 function renderPage (page, noAnimate) {
   var el1 = document.getElementById('leaderboard1')
-  if (!el1) return
-  var start = page * 4
+  var el2 = document.getElementById('leaderboard2')
+  if (!el1 || !el2) return
+  var start = page * 6
   var html1 = ''
-  for (var i = 0; i < 4; i++) {
+  var html2 = ''
+  for (var i = 0; i < 3; i++) {
     var entry = currentLeaderboard[start + i]
     if (entry) {
-      html1 += "<tr><td class='place leaderboardValue'>" + (start + i + 1) + ".</td><td class='initial leaderboardValue'>" + entry.nickname.toUpperCase() + "</td><td class='score leaderboardValue'>" + entry.score + '</td></tr>'
+      html1 += "<tr><td class='place leaderboardValue'>" + (start + i + 1) + ".</td><td class='initial leaderboardValue'>" + entry.nickname.toUpperCase().split('').join('.') + '.' + "</td><td class='score leaderboardValue'>" + entry.score + '</td></tr>'
+    }
+  }
+  for (var i = 3; i < 6; i++) {
+    var entry = currentLeaderboard[start + i]
+    if (entry) {
+      html2 += "<tr><td class='place leaderboardValue'>" + (start + i + 1) + ".</td><td class='initial leaderboardValue'>" + entry.nickname.toUpperCase().split('').join('.') + '.' + "</td><td class='score leaderboardValue'>" + entry.score + '</td></tr>'
     }
   }
   if (noAnimate) {
-    var $t = $('#leaderboard1')
+    var $t = $('#leaderboard1, #leaderboard2')
     $t.velocity('stop', true)
     el1.innerHTML = html1
+    el2.innerHTML = html2
     $t.css('opacity', 1)
   } else {
-    var $table = $('#leaderboard1')
-    $table.velocity('stop').velocity({ opacity: 0 }, {
+    var $tables = $('#leaderboard1, #leaderboard2')
+    $tables.velocity('stop').velocity({ opacity: 0 }, {
       duration: 400,
       complete: function () {
         el1.innerHTML = html1
-        $table.velocity({ opacity: 1 }, { duration: 400 })
+        el2.innerHTML = html2
+        $tables.velocity({ opacity: 1 }, { duration: 400 })
       }
     })
   }

@@ -72,13 +72,13 @@ Registration page (`app/expressviews/registration.ejs`) uses this palette: navy 
 
 ### Small Business Take Over (SBTO) Overlay
 
-`C:/SB-Scoreboard/banking.png` is the overlay image, loaded directly by the scoreboard window as a local file path. The image is the "Soccer at Schools — Bank of America" branded graphic.
+Images are loaded from `C:/SB-Scoreboard/sbto/` (scanned at startup). The app cycles through all images in alphabetical order before repeating — each trigger shows the next image. Falls back to `banking.png` if the folder is missing or empty.
 
 Settings fields (stored under the `settings` key in electron-json-storage):
 - `sbTakeoverTimes` — comma-separated minutes, e.g. `15, 45` — fires at that minute of **every** hour
 - `sbTakeoverDuration` — seconds to display the overlay (default 30)
 
-IPC flow: `src/app.js` checks the clock every second → sends `sbTakeoverStart` → `src/background.js` relays to `scoreboardWindow` → `src/scoreboard.js` fades in `#sbTakeover` (z-index 10002), waits, fades out, resumes leaderboard cycle from `currentPage`.
+IPC flow: `src/app.js` `sbTakeoverStart()` picks the next image → sends `sbTakeoverStart` with `{ duration, image }` → `src/background.js` relays to `scoreboardWindow` → `src/scoreboard.js` updates `#sbTakeover img` src, fades in (z-index 10002), waits, fades out, resumes leaderboard cycle from `currentPage`.
 
 New scores arriving during a takeover are queued in `newLeaderboard` and processed after the overlay fades out (`sbTakeoverActive` flag gates `checkScores`).
 
@@ -88,7 +88,7 @@ Settings apply immediately on save — `settings.js` sends `settingsUpdated` IPC
 
 ### Bus Take Over
 
-Triggers relays (via `CommandApp_USBRelay.exe` in `extraResources/`) and plays `C:/SB-Scoreboard/busstakeover.mp3`.
+Triggers relays (via `CommandApp_USBRelay.exe` in `extraResources/`), plays `C:/SB-Scoreboard/busstakeover.mp3`, fires the DMX cannon, and turns on the DMX fans.
 
 Settings fields:
 - `busTakeoverTimes` — comma-separated minutes (used when mode is `timer`)
@@ -97,14 +97,20 @@ Settings fields:
 - `busRelaySerialNumber` — USB relay device serial
 - `busRelay1Delay` / `busRelay1OnTime` — ms delay before firing / ms relay stays on (channel 01)
 - `busRelay2Delay` / `busRelay2OnTime` — same for channel 02
-- `busMp3Delay` — ms after relay trigger before audio plays
+- `busMp3Delay` — ms after trigger before audio plays
 - `busAudioVolume` — 0–1 float
+- `busFadeOutDuration` — ms to fade audio out when relay 1 turns off; `0` = instant cut (default 2000)
+- `busCannonDelay` — ms after trigger before firing DMX cannon (default 0)
+- `busFanDelay` — ms after trigger before turning on DMX fans (default 0)
+- `busFanOnTime` — ms fans stay on before auto-off (default 5000)
 
-**High-score trigger IPC flow:**
-`src/scoreboard.js` `showScore()` (only when displayed score === leaderboard[0].score)
+**Top-3 trigger IPC flow:**
+`src/scoreboard.js` `showScore()` (when displayed score is in leaderboard top 3)
 → `ipcRenderer.send('busHighScoreTrigger')`
 → `src/background.js` relays to `mainWindow`
 → `src/app.js` checks mode + cooldown → `runBusTakeover()`
+
+Audio fades out over `busFadeOutDuration` ms when relay 1 turns off (triggered by `fadeOutBusAudio()`).
 
 ### DMX Controls (Cannon + Fans)
 
@@ -123,7 +129,7 @@ The Enttec USB DMX Pro framing protocol is implemented directly in `src/app.js` 
 
 **Cannon test mode** cycles: On → `autoOff` ms (min 1000) → Off → 5 s → repeat, logging a fire count (`#N`) each cycle. Counter resets on each start. Implemented via `runCannonTestCycle()` / `startCannonTest()` / `stopCannonTest()`.
 
-**Fans** settings fields (same port, no auto-off):
+**Fans** settings fields:
 - `dmxFanChannel` — DMX channel number (1–512)
 - `dmxFanOnValue` — DMX value (0–255) sent on Fans On (default 255)
 - `dmxFanOffValue` — DMX value (0–255) sent on Fans Off (default 0)
@@ -132,10 +138,12 @@ The Enttec USB DMX Pro framing protocol is implemented directly in `src/app.js` 
 
 ### Scoreboard Display (`app/scoreboard.html` + `src/scoreboard.js`)
 
-- Leaderboard renders up to 24 entries across two side-by-side tables (`#leaderboard1`, `#leaderboard2`), 3 rows each, cycling pages every `cycleInterval` ms when > 6 entries.
-- Each row is **4 columns**: `.place` (rank) | `.initial` (nickname) | `.score` — dash column is defined in CSS but currently not rendered.
-- Nicknames are **2 characters max**, displayed as `X.X.` (periods between each character + trailing period).
-- New score overlay (`#newScore`) shows player's formatted initials + `'s SCORE` in `#newScoreName`, and the score value in `#newScoreText`.
+- Leaderboard renders up to 24 entries in a single table (`#leaderboard1`), 4 rows per page, cycling every `cycleInterval` ms when > 4 entries.
+- Each row is **3 columns**: `.place` (rank) | `.initial` (full name) | `.score`.
+- Names are stored as `"FirstName L."` (full first name + last initial), displayed uppercase.
+- Registration form (`app/expressviews/registration.ejs`) captures `firstName` (free text) and `lastName` (1 character max); `src/app.js` composes `nickname` before DB insert.
+- **New score overlay** (`#newScore`) shows `"NAME's SCORE"` in `#newScoreName` and the score in `#newScoreText`.
+- **New high score overlay** (`#newHighScore`) — shown instead of `#newScore` when the player takes the #1 spot. Uses `newHighScore.png` background. Shows only the player name (no `'s SCORE`). Same child elements pattern: `#newHighScoreName` / `#newHighScoreText`.
 - Font: `Connections` (loaded from `app/fonts/`).
 - `cycleTimer` lifecycle: always clear before setting; `showScore` guards start with `!sbTakeoverActive`; SBTO complete clears before restart.
 

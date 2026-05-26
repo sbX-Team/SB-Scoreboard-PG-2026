@@ -147,9 +147,16 @@
         <form id='registration'>
             <div class='row'>
                 <div class="col">
-                    <input type='text' class='form-control' id='nickname' name='nickname'
-                        autocomplete="off" placeholder="Initials" required
-                        data-parsley-errors-messages-disabled maxlength="2">
+                    <input type='text' class='form-control' id='firstName' name='firstName'
+                        autocomplete="off" placeholder="First Name" required
+                        data-parsley-errors-messages-disabled>
+                </div>
+            </div>
+            <div class='row'>
+                <div class="col">
+                    <input type='text' class='form-control' id='lastName' name='lastName'
+                        autocomplete="off" placeholder="Last Initial" required
+                        data-parsley-errors-messages-disabled maxlength="1">
                 </div>
             </div>
             <div class='row'>

@@ -55,20 +55,6 @@
             height:1080px;
             width:1920px;
         }
-        #newHighScore {
-            display: none;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            z-index: 10001;
-            background-color: #122048;
-            color: #fff;
-            background-image: url('./expressassets/images/newHighScore.png');
-            background-size: cover;
-            font-weight: 500;
-            height:1080px;
-            width:1920px;
-        }
         #header {
             height: 330px;
             text-align: center;
@@ -256,25 +242,33 @@
         .leaderboardTable{
             /* border:1px solid #fff; */
             font-family: "Connections";
-            font-size: 99px;
+            font-size: 104px;
 
         }
         #leaderboard1 {
-            position: absolute;
-            top: 461px;
-            left: 314px;
-            width: 1267px;
-            line-height: 1.2;
+         position: absolute;
+    top: 509px;
+    left: 314px;
+    width: 603px;
+    line-height: 1.2;
+        }
+         #leaderboard2 {
+              position: absolute;
+    top: 509px;
+    left: 972px;
+    width: 603px;
+    line-height: 1.2;
         }
         .place{
             width: 106px;
             text-align: right;
+
         }
         .initial{
-            width: 900px;
-            text-align: left;
-            padding-left: 40px;
+            width: 190px;
+            text-align: right;
             font-weight: bold;
+
         }
         /* .dash{
             width: 90px;
@@ -310,30 +304,6 @@
         font-weight: bold;
         text-transform: uppercase;
         }
-        #newHighScoreName {
-          position: absolute;
-    top: 851px;
-    left: 0;
-    width: 1920px;
-    text-align: center;
-    font-size: 90px;
-    color: #c41230;
-    font-family: "Connections";
-    font-weight: bold;
-    text-transform: uppercase;
-        }
-        #newHighScoreText {
-            display: inline-block;
-            color: #fff;
-            position: absolute;
-            left: 170px;
-            top: 378px;
-            font-size: 378px;
-            width: 1594px;
-            text-align: center;
-            font-family: 'Connections';
-            font-weight: bold;
-        }
 
     </style>
 </head>
@@ -347,45 +317,54 @@
         <div id="newScoreText">150</div>
     </div>
 
-    <div id='newHighScore'>
-        <div id="newHighScoreName">
-            J.S.'s Score
-        </div>
-        <div id="newHighScoreText">150</div>
-    </div>
-
     <div id='sbTakeover'>
         <img src='/SB-Scoreboard/banking.png' />
     </div>
 
     <div id="leaderboard">
-        <!-- static sample (for layout) -->
-        <!-- <table class='leaderboardTable' id="leaderboard1">
+        <table class='leaderboardTable' id="leaderboard1">
             <tr>
                 <td class='place leaderboardValue'>1.</td>
-                <td class='initial leaderboardValue'>JESSICA S.</td>
-                <td class='score leaderboardValue'>124</td>
+                <td class='initial leaderboardValue' id='initial1'>W</td>
+                <td class='dash leaderboardValue' id='dash1'>-</td>
+                <td class='score leaderboardValue' id='score1'>100</td>
             </tr>
             <tr>
-                <td class='place leaderboardValue'>2.</td>
-                <td class='initial leaderboardValue'>MICHAEL T.</td>
-                <td class='score leaderboardValue'>118</td>
+         <td class='place leaderboardValue'>2.</td>
+                <td class='initial leaderboardValue' id='initial2'>J</td>
+                <td class='dash leaderboardValue' id='dash2'>-</td>
+                <td class='score leaderboardValue' id='score2'>85</td>
             </tr>
             <tr>
                 <td class='place leaderboardValue'>3.</td>
-                <td class='initial leaderboardValue'>AMANDA R.</td>
-                <td class='score leaderboardValue'>105</td>
+                <td class='initial leaderboardValue' id='initial3'>J</td>
+                <td class='dash leaderboardValue' id='dash3'>-</td>
+                <td class='score leaderboardValue' id='score3'>80</td>
             </tr>
+        </table>
+         <table class='leaderboardTable' id="leaderboard2">
             <tr>
                 <td class='place leaderboardValue'>4.</td>
-                <td class='initial leaderboardValue'>CHRISTOPHER B.</td>
-                <td class='score leaderboardValue'>97</td>
+                <td class='initial leaderboardValue' id='initial1'>W</td>
+                <td class='dash leaderboardValue' id='dash1'>-</td>
+                <td class='score leaderboardValue' id='score1'>100</td>
             </tr>
-        </table> -->
+            <tr>
+         <td class='place leaderboardValue'>5.</td>
+                <td class='initial leaderboardValue' id='initial2'>J</td>
+                <td class='dash leaderboardValue' id='dash2'>-</td>
+                <td class='score leaderboardValue' id='score2'>85</td>
+            </tr>
+            <tr>
+                <td class='place leaderboardValue'>6.</td>
+                <td class='initial leaderboardValue' id='initial3'>J</td>
+                <td class='dash leaderboardValue' id='dash3'>-</td>
+                <td class='score leaderboardValue' id='score3'>80</td>
+            </tr>
+        </table>
 
-        <table class='leaderboardTable' id="leaderboard1"></table>
-
-        <!-- <table class='leaderboardTable' id="leaderboard1"></table> -->
+        <!-- <table class='leaderboardTable' id="leaderboard1"></table>
+         <table class='leaderboardTable' id="leaderboard2"></table> -->
 
 
 

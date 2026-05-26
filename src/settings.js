@@ -31,6 +31,10 @@ $(function () {
     $('#busRelay2Delay').val(settings.busRelay2Delay || 0);
     $('#busRelay2OnTime').val(settings.busRelay2OnTime || 1000);
     $('#busMp3Delay').val(settings.busMp3Delay || 0);
+    $('#busFadeOutDuration').val(settings.busFadeOutDuration || 2000);
+    $('#busCannonDelay').val(settings.busCannonDelay || 0);
+    $('#busFanDelay').val(settings.busFanDelay || 0);
+    $('#busFanOnTime').val(settings.busFanOnTime || 5000);
     $('#dmxPort').val(settings.dmxPort || '');
     $('#dmxChannel').val(settings.dmxChannel || 1);
     $('#dmxCannonOnValue').val(settings.dmxCannonOnValue !== undefined ? settings.dmxCannonOnValue : 255);

@@ -130,9 +130,7 @@ socket.on('reconnect', function () {
 
 function reset () {
   $('#score').val('')
-  $('#nickname').val('')
-  $('#nickname').removeClass('parsley-success')
-  $('#nickname').removeClass('parsley-error')
-  //uncheck all checkboxes
-  $('input:checkbox').prop( "checked", false )
+  $('#firstName').val('').removeClass('parsley-success parsley-error')
+  $('#lastName').val('').removeClass('parsley-success parsley-error')
+  $('input:checkbox').prop('checked', false)
 }

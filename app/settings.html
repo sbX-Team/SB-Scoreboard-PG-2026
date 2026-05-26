@@ -92,9 +92,9 @@
           <label for='busTakeoverMode'>Mode</label>
           <select name='busTakeoverMode' id='busTakeoverMode' class='form-control' style='width:300px'>
             <option value='timer'>Timer (scheduled minutes)</option>
-            <option value='highscore'>New High Score</option>
+            <option value='highscore'>New Top 3</option>
           </select>
-          <p class="field-desc"><strong>Timer</strong> — fires at the minutes configured below. <strong>New High Score</strong> — fires automatically whenever a new top score is set on the leaderboard.</p>
+          <p class="field-desc"><strong>Timer</strong> — fires at the minutes configured below. <strong>New Top 3</strong> — fires automatically whenever a player enters the top 3 on the leaderboard.</p>
         </div>
     </div>
 
@@ -167,6 +167,42 @@
           <label for='busMp3Delay'>MP3 Start Delay (ms)</label>
           <input type='number' name='busMp3Delay' id='busMp3Delay' class='form-control' style='width:200px' placeholder='0'>
           <p class="field-desc">How long to wait after the relay fires before playing <code>busstakeover.mp3</code>. Use this to sync audio with physical events.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='busFadeOutDuration'>Audio Fade Out Duration (ms)</label>
+          <input type='number' name='busFadeOutDuration' id='busFadeOutDuration' class='form-control' style='width:200px' placeholder='2000'>
+          <p class="field-desc">How long the audio fades out when Relay 1 turns off. Set to <strong>0</strong> to cut audio immediately.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6"><hr /><h5>DMX</h5></div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='busCannonDelay'>Cannon Delay (ms)</label>
+          <input type='number' name='busCannonDelay' id='busCannonDelay' class='form-control' style='width:200px' placeholder='0'>
+          <p class="field-desc">How long to wait after the take over triggers before firing the DMX cannon.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='busFanDelay'>Fans Delay (ms)</label>
+          <input type='number' name='busFanDelay' id='busFanDelay' class='form-control' style='width:200px' placeholder='0'>
+          <p class="field-desc">How long to wait after the take over triggers before turning on the DMX fans.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='busFanOnTime'>Fans On Time (ms)</label>
+          <input type='number' name='busFanOnTime' id='busFanOnTime' class='form-control' style='width:200px' placeholder='5000'>
+          <p class="field-desc">How long the DMX fans stay on before being turned off automatically.</p>
         </div>
     </div>
 

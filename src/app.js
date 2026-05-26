@@ -37,6 +37,38 @@ let scoreboardSettings = {
 let sbTakeoverTimes = []
 let sbTakeoverDuration = 30
 let sbLastTakeoverKey = ''
+let sbImageList = []
+let sbImageIndex = 0
+
+function loadSbImages () {
+  var folder = 'C:/SB-Scoreboard/sbto'
+  try {
+    var files = fs.readdirSync(folder)
+    sbImageList = files
+      .filter(function (f) { return /\.(png|jpg|jpeg|gif|webp)$/i.test(f) })
+      .sort()
+      .map(function (f) { return path.join(folder, f).replace(/\\/g, '/') })
+    sbImageIndex = 0
+    log.info('SBTO images loaded: ' + sbImageList.length)
+  } catch (e) {
+    sbImageList = []
+    log.info('SBTO folder not found, falling back to banking.png')
+  }
+}
+
+function getNextSbImage () {
+  if (sbImageList.length === 0) return null
+  var img = sbImageList[sbImageIndex]
+  sbImageIndex = (sbImageIndex + 1) % sbImageList.length
+  return img
+}
+
+function sbTakeoverStart () {
+  var data = { duration: sbTakeoverDuration }
+  var img = getNextSbImage()
+  if (img) data.image = img
+  ipcRenderer.send('sbTakeoverStart', data)
+}
 
 let busTakeoverTimes = []
 let busRelaySerialNumber = ''
@@ -51,6 +83,10 @@ let busAudioVolume = 1
 let busTakeoverMode = 'timer'     // 'timer' | 'highscore'
 let busHighScoreCooldown = 60     // seconds
 let busLastHighScoreTrigger = 0   // Date.now() ms timestamp
+let busFadeOutDuration = 2000     // ms
+let busCannonDelay = 0            // ms
+let busFanDelay = 0               // ms
+let busFanOnTime = 5000           // ms
 
 let dmxPort = ''
 let dmxChannel = 1
@@ -108,11 +144,38 @@ function relayOff (channel) {
   })
 }
 
+function fadeOutBusAudio (duration) {
+  if (!busAudio || busAudio.paused) return
+  if (!duration) {
+    busAudio.pause()
+    busAudio = null
+    return
+  }
+  var steps = 20
+  var stepTime = duration / steps
+  var startVolume = busAudio.volume
+  var volumeStep = startVolume / steps
+  var fadeInterval = setInterval(function () {
+    if (!busAudio) { clearInterval(fadeInterval); return }
+    var newVol = busAudio.volume - volumeStep
+    if (newVol <= 0) {
+      busAudio.pause()
+      busAudio = null
+      clearInterval(fadeInterval)
+    } else {
+      busAudio.volume = newVol
+    }
+  }, stepTime)
+}
+
 function runBusTakeover () {
   log.info('Bus Take Over starting')
   setTimeout(function () {
     relayOn('01')
-    setTimeout(function () { relayOff('01') }, busRelay1OnTime)
+    setTimeout(function () {
+      relayOff('01')
+      fadeOutBusAudio(busFadeOutDuration)
+    }, busRelay1OnTime)
   }, busRelay1Delay)
   setTimeout(function () {
     relayOn('02')
@@ -124,6 +187,11 @@ function runBusTakeover () {
     busAudio.volume = busAudioVolume
     busAudio.play().catch(function (err) { log.info('Bus audio error: ' + err.message) })
   }, busMp3Delay)
+  setTimeout(function () { cannonOn() }, busCannonDelay)
+  setTimeout(function () {
+    fanOn()
+    setTimeout(function () { fanOff() }, busFanOnTime)
+  }, busFanDelay)
 }
 
 function updateLeaderboardCounts () {
@@ -142,7 +210,7 @@ function updateSbTakeoverDisplay () {
 function updateBusTakeoverDisplay () {
   $('#busTakeoverTimesDisplay').text(busTakeoverTimes.length ? busTakeoverTimes.join(', ') : '—')
   $('#busRelaySerialDisplay').text(busRelaySerialNumber || '—')
-  $('#busTakeoverModeDisplay').text(busTakeoverMode === 'highscore' ? 'New High Score' : 'Timer')
+  $('#busTakeoverModeDisplay').text(busTakeoverMode === 'highscore' ? 'New Top 3' : 'Timer')
   $('#busVolumeSlider').val(busAudioVolume)
   $('#busVolumeDisplay').text(Math.round(busAudioVolume * 100) + '%')
 }
@@ -648,7 +716,7 @@ server.app.get('/api/controlsettings', function (_req, res) {
 })
 
 server.app.get('/triggersbtakeover', function (_req, res) {
-  ipcRenderer.send('sbTakeoverStart', { duration: sbTakeoverDuration })
+  sbTakeoverStart()
   res.json({ result: 'success', message: 'SBTO triggered' })
 })
 
@@ -711,7 +779,11 @@ server.app.post('/insertscore', function (req, res) {
   req.body.deleted = 0
   req.body.inserted = 1
   req.body.score = parseInt(req.body.score)
-  req.body.nickname = (req.body.nickname || '').trim()
+  var firstName = (req.body.firstName || '').trim()
+  var lastName = (req.body.lastName || '').trim()
+  req.body.nickname = lastName ? firstName + ' ' + lastName[0].toUpperCase() + '.' : firstName
+  delete req.body.firstName
+  delete req.body.lastName
   db.insert(req.body, function (err, newDoc) {
     if (err) {
       console.log(err)
@@ -752,6 +824,7 @@ ipcRenderer.on('getInitialLeaderboard', function () {
 // log.transports.console.level = false;
 log.info('Starting')
 log.info(process.version)
+loadSbImages()
 $(document).ready(function () {
   storage.getMany(['settings', 'eventSettings', 'photosettings', 'sharesettingsStorage', 'framesettingsStorage', 'photoboothsettingsStorage'], function (error, settings) {
     if (error) {
@@ -774,8 +847,12 @@ $(document).ready(function () {
       busRelay2Delay = parseInt(settings.settings.busRelay2Delay) || 0
       busRelay2OnTime = parseInt(settings.settings.busRelay2OnTime) || 1000
       busMp3Delay = parseInt(settings.settings.busMp3Delay) || 0
+      busCannonDelay = parseInt(settings.settings.busCannonDelay) || 0
+      busFanDelay = parseInt(settings.settings.busFanDelay) || 0
+      busFanOnTime = parseInt(settings.settings.busFanOnTime) || 5000
       busAudioVolume = parseFloat(settings.settings.busAudioVolume)
       if (isNaN(busAudioVolume) || busAudioVolume < 0 || busAudioVolume > 1) busAudioVolume = 1
+      busFadeOutDuration = settings.settings.busFadeOutDuration != null ? parseInt(settings.settings.busFadeOutDuration) : 2000
       busTakeoverMode = settings.settings.busTakeoverMode || 'timer'
       busHighScoreCooldown = parseInt(settings.settings.busHighScoreCooldown) || 60
       dmxPort = settings.settings.dmxPort || ''
@@ -807,7 +884,7 @@ $(document).ready(function () {
       var match = sbTakeoverTimes.some(function (t) { return t === m })
       if (match) {
         sbLastTakeoverKey = key
-        ipcRenderer.send('sbTakeoverStart', { duration: sbTakeoverDuration })
+        sbTakeoverStart()
       }
     }
     if (busTakeoverMode === 'timer' && key !== busLastTakeoverKey) {
@@ -830,6 +907,10 @@ $(document).ready(function () {
     busRelay2Delay = parseInt(config.busRelay2Delay) || 0
     busRelay2OnTime = parseInt(config.busRelay2OnTime) || 1000
     busMp3Delay = parseInt(config.busMp3Delay) || 0
+    busCannonDelay = parseInt(config.busCannonDelay) || 0
+    busFanDelay = parseInt(config.busFanDelay) || 0
+    busFanOnTime = parseInt(config.busFanOnTime) || 5000
+    busFadeOutDuration = config.busFadeOutDuration != null ? parseInt(config.busFadeOutDuration) : 2000
     busTakeoverMode = config.busTakeoverMode || 'timer'
     busHighScoreCooldown = parseInt(config.busHighScoreCooldown) || 60
     updateBusTakeoverDisplay()
@@ -866,7 +947,7 @@ $(function () {
   })
 
   $('#triggerSbTakeover').on('click', _.debounce(function () {
-    ipcRenderer.send('sbTakeoverStart', { duration: sbTakeoverDuration })
+    sbTakeoverStart()
   }, 3000, true))
 
   $('#triggerBusTakeover').on('click', _.debounce(function () {
