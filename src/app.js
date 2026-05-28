@@ -95,6 +95,7 @@ let dmxCannonOffValue = 0
 let dmxCannonAutoOff = 0
 let dmxConnected = false
 let dmxUniverse = null
+let dmxUniverseData = Buffer.alloc(512, 0)
 let dmxAutoOffTimer = null
 let dmxTestMode = false
 let dmxTestTimer = null
@@ -252,12 +253,11 @@ function initDMX () {
 
 function sendDmxPacket (channel, value) {
   if (!dmxConnected || !dmxUniverse) { log.info('DMX: not connected'); return }
-  var channelData = Buffer.alloc(512, 0)
-  channelData[channel - 1] = value
-  var dataLength = channelData.length + 1
+  dmxUniverseData[channel - 1] = value
+  var dataLength = dmxUniverseData.length + 1
   var packet = Buffer.concat([
     Buffer.from([0x7E, 0x06, dataLength & 0xFF, (dataLength >> 8) & 0xFF, 0x00]),
-    channelData,
+    dmxUniverseData,
     Buffer.from([0xE7])
   ])
   dmxUniverse.write(packet, function (err) {
