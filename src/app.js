@@ -442,11 +442,15 @@ server.app.get('/stats', function (_req, res) {
       console.log(docs)
       var groups = _.groupBy(docs, function (date) {
         console.log(date.startDate)
-        return moment(date.startDate).startOf('day').format()
+        return date.startDate ? moment(date.startDate).startOf('day').format() : 'previous'
       })
       console.log(groups.length)
       var array = Object.values(groups)
-      res.render('stats', { title: 'Stats', subtitle: '', ip: ip + ':3000', stats: array })
+      var earliestDate = docs.reduce(function (min, doc) {
+        if (!doc.startDate) return min
+        return (!min || moment(doc.startDate).isBefore(min)) ? moment(doc.startDate) : min
+      }, null)
+      res.render('stats', { title: 'Stats', subtitle: '', ip: ip + ':3000', stats: array, earliestDate: earliestDate })
     }
   })
 })
@@ -779,6 +783,7 @@ server.app.post('/insertscore', function (req, res) {
   req.body.deleted = 0
   req.body.inserted = 1
   req.body.score = parseInt(req.body.score)
+  req.body.startDate = moment().toString()
   var firstName = (req.body.firstName || '').trim()
   var lastName = (req.body.lastName || '').trim()
   req.body.nickname = lastName ? firstName + ' ' + lastName[0].toUpperCase() + '.' : firstName

@@ -47,7 +47,7 @@
 						
 						%>
 						<tr>
-							<td scope="row" class='place'><%= momentFormat(stats[i][0].startDate) %></td>
+							<td scope="row" class='place'><%= stats[i][0].startDate ? momentFormat(stats[i][0].startDate) : (earliestDate ? 'Entries Before ' + earliestDate.format('MMMM Do') : 'Previous') %></td>
 							<td  class='name'><%= stats[i].length %></td>
 							
 				
