@@ -10,7 +10,9 @@
       "Bash(xargs grep:*)",
       "Bash(node build-icon.js)",
       "Bash(findstr \"serialport\")",
-      "Bash(./node_modules/.bin/electron-builder install-app-deps *)"
+      "Bash(./node_modules/.bin/electron-builder install-app-deps *)",
+      "PowerShell(Add-Type -AssemblyName System.Drawing; foreach \\($f in @\\('new_score_background.png','new_score_background_overlay.png','leaderboard_background.png','new_score.png','logo.png'\\)\\) { $p = Join-Path \"c:\\\\Users\\\\kenne\\\\SB-Scoreboard-PG-2026\\\\app\\\\expressassets\\\\images\" $f; if \\(Test-Path $p\\) { $img = [System.Drawing.Image]::FromFile\\($p\\); Write-Output \"$f : $\\($img.Width\\) x $\\($img.Height\\)\"; $img.Dispose\\(\\) } else { Write-Output \"$f : NOT FOUND\" } })",
+      "PowerShell(Add-Type -AssemblyName System.Drawing; $img = [System.Drawing.Bitmap]::FromFile\\(\"c:\\\\Users\\\\kenne\\\\SB-Scoreboard-PG-2026\\\\app\\\\expressassets\\\\images\\\\new_score_background.png\"\\); $c1 = $img.GetPixel\\(100,100\\); $c2 = $img.GetPixel\\([int]\\($img.Width/2\\), [int]\\($img.Height/2\\)\\); $c3 = $img.GetPixel\\(100, $img.Height-100\\); Write-Output \\(\"top-left: {0:X2}{1:X2}{2:X2}\" -f $c1.R,$c1.G,$c1.B\\); Write-Output \\(\"center: {0:X2}{1:X2}{2:X2}\" -f $c2.R,$c2.G,$c2.B\\); Write-Output \\(\"bottom: {0:X2}{1:X2}{2:X2}\" -f $c3.R,$c3.G,$c3.B\\); $img.Dispose\\(\\))"
     ]
   }
 }

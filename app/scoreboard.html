@@ -8,19 +8,48 @@
     <link rel="stylesheet" href="./expressassets/css/bootstrap.min.css">
     <style>
         @font-face {
-    font-family: 'Connections';
-    src: url('./fonts/Connections.woff2') format('woff2'),
-        url('./fonts/Connections.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
+            font-family: 'Montserrat';
+            src: url('fonts/Montserrat-ThinItalic.woff2') format('woff2'),
+                url('fonts/Montserrat-ThinItalic.woff') format('woff');
+            font-weight: 100;
+            font-style: italic;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('fonts/Montserrat-Thin.woff2') format('woff2'),
+                url('fonts/Montserrat-Thin.woff') format('woff');
+            font-weight: 100;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('fonts/Montserrat-ExtraBold.woff2') format('woff2'),
+                url('fonts/Montserrat-ExtraBold.woff') format('woff');
+            font-weight: 800;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Montserrat';
+            src: url('fonts/Montserrat-Regular.woff2') format('woff2'),
+                url('fonts/Montserrat-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
 
 
         body {
             cursor: none;
-           
-            
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 100;
+            background-color: #fff;
+            transition: background-color 800ms ease;
         }
         #connectionError {
             position: absolute;
@@ -30,16 +59,49 @@
             display: none;
         }
         #leaderboard {
-            height: 1080px;
-            width: 1920px;
+            height: 1920px;
+            width: 1080px;
             overflow: hidden;
-            /* font-weight: 500; */
-            /* display: none;
-             */
-            background-image: url('./expressassets/images/leaderboard.png');
+            background-color: #fff;
+            background-image: url('./expressassets/images/leaderboard_background.png');
+            background-size: 100% auto;
+            background-position: top center;
+            background-repeat: no-repeat;
             position: absolute;
             top:0px;
             left:0px;
+        }
+        #leaderboard::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(to bottom, transparent 0%, transparent 33%, #fff 70%);
+            pointer-events: none;
+        }
+        #leaderboardLogo {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            z-index: 1;
+        }
+        #leaderboardHeader {
+            position: absolute;
+            top: 220px;
+            left: 0;
+            width: 1080px;
+            text-align: center;
+            font-family: 'Montserrat';
+            font-weight: 800;
+            font-size: 58px;
+            color: #1d4999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            z-index: 1;
         }
         #newScore {
             display: none;
@@ -47,27 +109,31 @@
             top: 0px;
             left: 0px;
             z-index: 10001;
-            background-color: #122048;
+            background-color: #1B459C;
             color: #fff;
-            background-image: url('./expressassets/images/newscore.png');
-            background-size: cover;
+            background-image: url('./expressassets/images/new_score_background_overlay.png'), url('./expressassets/images/new_score_background.png');
+            background-size: cover, cover;
+            background-position: center, center;
+            background-repeat: no-repeat, no-repeat;
             font-weight: 500;
-            height:1080px;
-            width:1920px;
+            height:1920px;
+            width:1080px;
         }
-        #newHighScore {
-            display: none;
+        #newScoreBanner {
             position: absolute;
-            top: 0px;
-            left: 0px;
-            z-index: 10001;
-            background-color: #122048;
-            color: #fff;
-            background-image: url('./expressassets/images/newHighScore.png');
-            background-size: cover;
-            font-weight: 500;
-            height:1080px;
-            width:1920px;
+            top: 332px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 620px;
+            z-index: 1;
+        }
+        #newScoreLogo {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 270px;
+            z-index: 1;
         }
         #header {
             height: 330px;
@@ -172,17 +238,16 @@
             line-height: 1;
         }
         #newScoreText {
-               display: inline-block;
+            display: inline-block;
             color: #fff;
             position: absolute;
-            left: 170px;
-            top: 404px;
-            font-size: 378px;
-            width: 1594px;
-            /* border: 1px solid; */
+            left: 96px;
+            top: 1032px;
+            font-size: 286px;
+            width: 897px;
             text-align: center;
-            font-family: 'Connections';
-            font-weight: bold;
+            font-family: 'Montserrat';
+            font-weight: 100;
         }
         #pts {
             position: relative;
@@ -251,39 +316,37 @@
 
 
         .leaderboardValue {
-            color: #fff;
+            color: #1b459c;
+            border-top: 1px solid #1b459c;
+            border-bottom: 1px solid #1b459c;
+            padding-top: 48px;
+            padding-bottom: 48px;
         }
         .leaderboardTable{
-            /* border:1px solid #fff; */
-            font-family: "Connections";
-            font-size: 99px;
-
+            font-family: 'Montserrat';
+            font-weight: 400;
+            font-size: 72px;
+            border-collapse: collapse;
         }
         #leaderboard1 {
             position: absolute;
-            top: 461px;
-            left: 314px;
-            width: 1267px;
+            top: 380px;
+            left: 70px;
+            width: 940px;
             line-height: 1.2;
+            z-index: 1;
         }
         .place{
-            width: 106px;
-            text-align: right;
-        }
-        .initial{
-            width: 900px;
-            text-align: left;
-            padding-left: 40px;
-            font-weight: bold;
-        }
-        /* .dash{
             width: 90px;
             text-align: center;
-        } */
+        }
+        .initial{
+            width: 600px;
+            text-align: center;
+        }
         .score{
-            width: 210px;
-            text-align: right;
-            font-weight: bold;
+            width: 250px;
+            text-align: center;
 
         }
         #sbTakeover {
@@ -291,48 +354,28 @@
             position: absolute;
             top: 0; left: 0;
             z-index: 10002;
-            width: 1920px; height: 1080px;
+            width: 1080px; height: 1920px;
         }
         #sbTakeover img {
-            width: 1920px; height: 1080px;
+            width: 1080px; height: 1920px;
             object-fit: cover;
         }
         #newScoreName {
-         position: absolute;
-        top: 269px;
-        left: 0;
-        width: 1920px;
-        text-align: center;
-        font-size: 80px;
-        color: #c41230;
-        font-size: 127px;
-        font-family: "Connections";
-        font-weight: bold;
-        text-transform: uppercase;
-        }
-        #newHighScoreName {
-          position: absolute;
-    top: 851px;
-    left: 0;
-    width: 1920px;
-    text-align: center;
-    font-size: 90px;
-    color: #c41230;
-    font-family: "Connections";
-    font-weight: bold;
-    text-transform: uppercase;
-        }
-        #newHighScoreText {
-            display: inline-block;
-            color: #fff;
             position: absolute;
-            left: 170px;
-            top: 378px;
-            font-size: 378px;
-            width: 1594px;
-            text-align: center;
-            font-family: 'Connections';
-            font-weight: bold;
+            top: 792px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: inline-block;
+            white-space: nowrap;
+            background: #fff;
+            color: #1d4999;
+            font-size: 136px;
+            font-family: 'Montserrat';
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 24px 42px;
+            border-radius: 36px;
         }
 
     </style>
@@ -341,17 +384,12 @@
 <body class='blue'>
 
     <div id='newScore'>
+        <img id="newScoreBanner" src="./expressassets/images/new_score.png" />
         <div id="newScoreName">
             J.S.'s Score
         </div>
         <div id="newScoreText">150</div>
-    </div>
-
-    <div id='newHighScore'>
-        <div id="newHighScoreName">
-            J.S.'s Score
-        </div>
-        <div id="newHighScoreText">150</div>
+        <img id="newScoreLogo" src="./expressassets/images/logo.png" />
     </div>
 
     <div id='sbTakeover'>
@@ -359,6 +397,9 @@
     </div>
 
     <div id="leaderboard">
+        <img id="leaderboardLogo" src="./expressassets/images/logo.png" />
+        <div id="leaderboardHeader">Leaderboard</div>
+
         <!-- static sample (for layout) -->
         <!-- <table class='leaderboardTable' id="leaderboard1">
             <tr>
@@ -384,12 +425,6 @@
         </table> -->
 
         <table class='leaderboardTable' id="leaderboard1"></table>
-
-        <!-- <table class='leaderboardTable' id="leaderboard1"></table> -->
-
-
-
-
     </div>
 
     <img src='./expressassets/images/disconnected.png' id='connectionError' />

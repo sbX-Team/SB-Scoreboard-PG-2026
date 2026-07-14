@@ -138,12 +138,11 @@ The Enttec USB DMX Pro framing protocol is implemented directly in `src/app.js` 
 
 ### Scoreboard Display (`app/scoreboard.html` + `src/scoreboard.js`)
 
-- Leaderboard renders up to 24 entries in a single table (`#leaderboard1`), 4 rows per page, cycling every `cycleInterval` ms when > 4 entries.
+- Leaderboard renders up to 24 entries in a single table (`#leaderboard1`), 8 rows per page (`pageSize`), cycling every `cycleInterval` ms when > 8 entries.
 - Each row is **3 columns**: `.place` (rank) | `.initial` (full name) | `.score`.
 - Names are stored as `"FirstName L."` (full first name + last initial), displayed uppercase.
 - Registration form (`app/expressviews/registration.ejs`) captures `firstName` (free text) and `lastName` (1 character max); `src/app.js` composes `nickname` before DB insert.
-- **New score overlay** (`#newScore`) shows `"NAME's SCORE"` in `#newScoreName` and the score in `#newScoreText`.
-- **New high score overlay** (`#newHighScore`) — shown instead of `#newScore` when the player takes the #1 spot. Uses `newHighScore.png` background. Shows only the player name (no `'s SCORE`). Same child elements pattern: `#newHighScoreName` / `#newHighScoreText`.
+- **New score overlay** (`#newScore`) shows the player name in `#newScoreName` and the score in `#newScoreText` — used for every new score, including the #1 spot (the former separate `#newHighScore` overlay was merged into this one).
 - Font: `Connections` (loaded from `app/fonts/`).
 - `cycleTimer` lifecycle: always clear before setting; `showScore` guards start with `!sbTakeoverActive`; SBTO complete clears before restart.
 

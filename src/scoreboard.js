@@ -9,6 +9,8 @@ var numScores = 0
 var newScoreDisplayTime = 5000
 var sbTakeoverDuration = 30
 
+var newScoreBgColor = '#1B459C'
+
 var newLeaderboard = []
 let scrolling = false
 let delay = 0
@@ -18,6 +20,7 @@ var currentPage = 0
 var cycleTimer = null
 var cycleInterval = 6000
 var sbTakeoverActive = false
+var pageSize = 8
 
 // Load settings from storage
 storage.get('settings', function (error, settings) {
@@ -62,7 +65,7 @@ ipcRenderer.on('sbTakeoverStart', function (event, data) {
             sbTakeoverActive = false
             if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
             renderPage(currentPage, true)
-            if (currentLeaderboard.length > 4) {
+            if (currentLeaderboard.length > pageSize) {
               cycleTimer = setInterval(nextPage, cycleInterval)
             }
           }
@@ -102,18 +105,17 @@ function checkScores () {
 
 function showScore (scoreboard, speed, nickname) {
   console.log('Show Score')
-  var isTopScore = scoreboard.length > 0 && scoreboard[0].score === speed
   if (scoreboard.slice(0, 3).some(function (e) { return e.score === speed })) {
     ipcRenderer.send('busHighScoreTrigger')
   }
   if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
 
   var formattedNickname = (nickname || '').toUpperCase()
-  var $overlay = isTopScore ? $('#newHighScore') : $('#newScore')
-  var nameId = isTopScore ? 'newHighScoreName' : 'newScoreName'
-  var textId = isTopScore ? 'newHighScoreText' : 'newScoreText'
-  document.getElementById(nameId).innerHTML = isTopScore ? formattedNickname : formattedNickname + "'s SCORE"
-  document.getElementById(textId).innerHTML = speed
+  var $overlay = $('#newScore')
+  document.getElementById('newScoreName').innerHTML = formattedNickname
+  document.getElementById('newScoreText').innerHTML = speed
+
+  document.body.style.backgroundColor = newScoreBgColor
 
   $overlay.velocity('transition.fadeIn', {
     duration: 800,
@@ -126,11 +128,12 @@ function showScore (scoreboard, speed, nickname) {
       setTimeout(function () {
         currentPage = 0
         renderPage(0, true)
+        document.body.style.backgroundColor = '#fff'
         $overlay.velocity('transition.fadeOut', {
           duration: 800,
           complete: function () {
             if (cycleTimer) { clearInterval(cycleTimer); cycleTimer = null }
-            if (!sbTakeoverActive && currentLeaderboard.length > 4) {
+            if (!sbTakeoverActive && currentLeaderboard.length > pageSize) {
               cycleTimer = setInterval(nextPage, cycleInterval)
             }
             checkScores()
@@ -206,13 +209,13 @@ function updateLeaderboard (leaderboard) {
   if (cycleTimer) clearInterval(cycleTimer)
   currentPage = 0
   renderPage(0)
-  if (currentLeaderboard.length > 4) {
+  if (currentLeaderboard.length > pageSize) {
     cycleTimer = setInterval(nextPage, cycleInterval)
   }
 }
 
 function nextPage () {
-  var pages = Math.ceil(currentLeaderboard.length / 4)
+  var pages = Math.ceil(currentLeaderboard.length / pageSize)
   if (pages <= 1) return
   currentPage = (currentPage + 1) % pages
   renderPage(currentPage)
@@ -221,12 +224,12 @@ function nextPage () {
 function renderPage (page, noAnimate) {
   var el1 = document.getElementById('leaderboard1')
   if (!el1) return
-  var start = page * 4
+  var start = page * pageSize
   var html1 = ''
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < pageSize; i++) {
     var entry = currentLeaderboard[start + i]
     if (entry) {
-      html1 += "<tr><td class='place leaderboardValue'>" + (start + i + 1) + ".</td><td class='initial leaderboardValue'>" + entry.nickname.toUpperCase() + "</td><td class='score leaderboardValue'>" + entry.score + '</td></tr>'
+      html1 += "<tr><td class='place leaderboardValue'>" + (start + i + 1) + "</td><td class='initial leaderboardValue'>" + entry.nickname.toUpperCase() + "</td><td class='score leaderboardValue'>" + entry.score + '</td></tr>'
     }
   }
   if (noAnimate) {

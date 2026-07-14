@@ -306,8 +306,8 @@ helpMenu = {
 function createScoreboardWindow () {
   if (scoreboardWindow === null) {
     scoreboardWindow = createWindow('scoreboard', {
-      width: 1920,
-      height: 1080,
+      width: 1080,
+      height: 1920,
       autoHideMenuBar: true,
       webPreferences: {
         nodeIntegration: true,
