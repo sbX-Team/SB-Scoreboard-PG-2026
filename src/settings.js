@@ -43,6 +43,8 @@ $(function () {
     $('#dmxFanChannel').val(settings.dmxFanChannel || 2);
     $('#dmxFanOnValue').val(settings.dmxFanOnValue !== undefined ? settings.dmxFanOnValue : 255);
     $('#dmxFanOffValue').val(settings.dmxFanOffValue !== undefined ? settings.dmxFanOffValue : 0);
+    $('#countdownDelay').val(settings.countdownDelay || 0);
+    $('#qrDecryptionSecret').val(settings.qrDecryptionSecret || '');
 
     console.log(settings);
   });

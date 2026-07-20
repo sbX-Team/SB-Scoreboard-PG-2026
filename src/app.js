@@ -105,6 +105,9 @@ let dmxFanChannel = 2
 let dmxFanOnValue = 255
 let dmxFanOffValue = 0
 
+let countdownDelay = 0
+let qrDecryptionSecret = ''
+
 function parseSbTakeoverTimes (str) {
   if (!str) return []
   return str.split(',').map(function (s) {
@@ -553,6 +556,7 @@ server.app.post('/startgame', function (req, res) {
       // console.log(newDoc)
       log.info('New Registration Saved')
       log.info(newDoc)
+      log.info('startGame: ' + JSON.stringify(newDoc))
       server.io.emit('startGame', newDoc)
       res.json({ result: 'success', message: 'Game Start Sent' })
     }
@@ -632,6 +636,7 @@ server.app.get('/bat1switch', function (req, res) {
 
 server.app.post('/gameend', function (req, res) {
   // Forward the game end to anything that listening
+  log.info('gameEnd: {}')
   server.io.emit('gameEnd', {})
   res.json({ result: 'success', message: 'Game End Received' })
 })
@@ -818,6 +823,32 @@ server.app.post('/insertscore', function (req, res) {
   // res.render('registration', { title: 'Settings', subtitle: '', ip: ip + ':3000' })
 })
 
+server.app.get('/scanner', function (_req, res) {
+  res.render('scanner', {
+    countdownDelay: countdownDelay,
+    qrDecryptionSecret: qrDecryptionSecret
+  })
+})
+
+server.io.on('connection', function (socket) {
+  socket.on('arrayFireReceived', function (data) {
+    log.info('arrayFireReceived: ' + JSON.stringify(data))
+    socket.broadcast.emit('arrayFireReceived', data)
+  })
+  socket.on('guestDone', function (data) {
+    log.info('guestDone: ' + JSON.stringify(data))
+    socket.broadcast.emit('guestDone', data)
+  })
+  socket.on('startGame', function (data) {
+    log.info('startGame: ' + JSON.stringify(data))
+    socket.broadcast.emit('startGame', data)
+  })
+  socket.on('endGame', function (data) {
+    log.info('endGame: ' + JSON.stringify(data))
+    socket.broadcast.emit('endGame', data)
+  })
+})
+
 ipcRenderer.on('getInitialLeaderboard', function () {
   db.find({ score: { $exists: true }, deleted: 0 }).sort({ score: -1 }).limit(24).exec(function (err, docs) {
     if (!err) {
@@ -871,6 +902,8 @@ $(document).ready(function () {
       dmxFanOnValue = parseInt(settings.settings.dmxFanOnValue)
       if (isNaN(dmxFanOnValue)) dmxFanOnValue = 255
       dmxFanOffValue = parseInt(settings.settings.dmxFanOffValue) || 0
+      countdownDelay = parseInt(settings.settings.countdownDelay) || 0
+      qrDecryptionSecret = settings.settings.qrDecryptionSecret || ''
       initDMX()
     }
     console.log('Scoreboard Settings:', scoreboardSettings)
@@ -930,6 +963,8 @@ $(document).ready(function () {
     dmxFanOnValue = parseInt(config.dmxFanOnValue)
     if (isNaN(dmxFanOnValue)) dmxFanOnValue = 255
     dmxFanOffValue = parseInt(config.dmxFanOffValue) || 0
+    countdownDelay = parseInt(config.countdownDelay) || 0
+    qrDecryptionSecret = config.qrDecryptionSecret || ''
     initDMX()
   })
 

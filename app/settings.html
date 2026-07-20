@@ -278,6 +278,26 @@
         </div>
     </div>
 
+    <div class='row settingfield'>
+        <div class="col-md-12"><hr /><h4>QR Scanner</h4></div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='countdownDelay'>Countdown Delay (ms)</label>
+          <input type='number' name='countdownDelay' id='countdownDelay' class='form-control' style='width:200px' placeholder='0'>
+          <p class="field-desc">How long to wait after "Take Photo" is pressed before the 3-2-1 countdown overlay begins.</p>
+        </div>
+    </div>
+
+    <div class='row settingfield'>
+        <div class="col-md-6">
+          <label for='qrDecryptionSecret'>QR Decryption Secret</label>
+          <input type='text' name='qrDecryptionSecret' id='qrDecryptionSecret' class='form-control' style='width:400px'>
+          <p class="field-desc">Shared secret used to decrypt the AES-256-CBC QR payload locally in the scanner (no server round-trip). Must match the registration system's key exactly.</p>
+        </div>
+    </div>
+
     <div class='row settingfield' style="margin-top:1rem;">
         <div class="col-xs-4">
           <input type='button' class='btn btn-primary' value='Save Settings' id='savesettings'>

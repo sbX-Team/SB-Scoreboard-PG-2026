@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <title>Scanner</title>
+    <link rel="stylesheet" href="/expressassets/css/bootstrap.min.css" crossorigin="anonymous">
+    <style>
+        html, body { height: 100%; max-width: 100%; margin: 0; overflow: hidden; }
+        body { display: flex; flex-direction: column; }
+        .navbar { flex: 0 0 auto; }
+        .container { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
+        #reader { flex: 1 1 auto; min-height: 0; width: 100% !important; overflow: hidden; position: relative; }
+        #reader img, #reader canvas { max-width: 100%; }
+        #results-card .d-flex > .btn { min-width: 0; }
+        #scan-status { flex: 0 0 auto; font-size: 1.4rem; font-weight: bold; text-align: center; margin-top: 0.75rem; }
+        #results-card { display: none; flex: 0 0 auto; margin-top: 1.5rem; }
+        #error-card { display: none; flex: 0 0 auto; margin-top: 1.5rem; }
+        .status-row { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0; border-bottom: 1px solid #eee; }
+        .status-row:last-child { border-bottom: none; }
+        .person-label { font-size: 1.1rem; font-weight: 600; }
+        .person-slug { font-size: 0.75rem; color: #999; }
+        .badge-complete { background: #28a745; color: #fff; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.95rem; }
+        .badge-waiting { background: #ffc107; color: #333; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.95rem; }
+        .badge-not-saved { background: #aaa; color: #fff; padding: 0.35rem 0.75rem; border-radius: 20px; font-size: 0.95rem; }
+        #game-in-progress { display: none; flex: 0 0 auto; margin-top: 1.5rem; text-align: center; font-size: 1.6rem; font-weight: bold; padding: 3rem 1rem; }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <span class="navbar-brand mb-0 h1">P&amp;G Scoreboard &mdash; Scanner</span>
+    </nav>
+
+    <div class="container">
+        <div id="scanner-section">
+            <div id="reader"></div>
+            <div id="scan-status">Scanning...</div>
+        </div>
+
+        <div class="card" id="results-card">
+            <div class="card-body">
+                <h5 class="card-title">Users</h5>
+                <div id="results-list"></div>
+                <div class="d-flex mt-3" style="gap: 8px;">
+                    <button type="button" class="btn btn-primary flex-fill" id="recheck-btn">Re-check</button>
+                    <button type="button" class="btn btn-outline-secondary flex-fill" id="scan-again-btn">Scan Again</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-danger" id="error-card">
+            <p><strong>Not Found</strong></p>
+            <p id="error-message"></p>
+            <button type="button" class="btn btn-warning btn-lg btn-block" id="error-scan-again-btn">Scan Again</button>
+        </div>
+
+        <div class="alert alert-info" id="game-in-progress">
+            Game In Progress&hellip;
+        </div>
+    </div>
+
+    <script src="/expressassets/js/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="/expressassets/js/popper.min.js" crossorigin="anonymous"></script>
+    <script src="/expressassets/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="/expressassets/js/html5-qrcode.min.js" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var qrDecryptionSecret = '<%- qrDecryptionSecret %>'
+
+        var ip = window.location.host
+        var socket = io(ip)
+        var wasConnected = false
+        var lastScannedText = null
+
+        socket.on('connect', function () {
+            if (wasConnected) window.location.reload()
+            wasConnected = true
+        })
+
+        var html5QrCode = new Html5Qrcode('reader')
+        var config = { fps: 10, qrbox: { width: 250, height: 250 } }
+
+        var currentGuests = []
+        var currentRegistrationId = null
+        var currentQrData = null
+
+        // AES-256-CBC decryption of the QR payload, done locally so each scan
+        // doesn't need a round trip to the server. Key = SHA-256(secret), IV = first
+        // 16 bytes of the base64-decoded blob, matching the registration system's format.
+        var qrDecryptKeyPromise = crypto.subtle.digest('SHA-256', new TextEncoder().encode(qrDecryptionSecret))
+            .then(function (hash) {
+                return crypto.subtle.importKey('raw', hash, { name: 'AES-CBC' }, false, ['decrypt'])
+            })
+
+        function base64ToBytes (b64) {
+            var binary = atob(b64)
+            var bytes = new Uint8Array(binary.length)
+            for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i)
+            return bytes
+        }
+
+        function decryptQrPayload (encryptedBase64) {
+            // TEMP DEBUG — remove with the rest of the temp test code
+            console.log('[decrypt debug] secret=' + JSON.stringify(qrDecryptionSecret) + ' input=' + JSON.stringify(encryptedBase64))
+            return Promise.resolve().then(function () {
+                var bytes = base64ToBytes(encryptedBase64)
+                var iv = bytes.slice(0, 16)
+                var ciphertext = bytes.slice(16)
+                console.log('[decrypt debug] totalBytes=' + bytes.length + ' ivBytes=' + iv.length + ' ciphertextBytes=' + ciphertext.length)
+                return qrDecryptKeyPromise.then(function (key) {
+                    return crypto.subtle.decrypt({ name: 'AES-CBC', iv: iv }, key, ciphertext)
+                })
+            }).then(function (decryptedBuf) {
+                return JSON.parse(new TextDecoder('utf-8').decode(decryptedBuf))
+            })
+        }
+
+        function playGameRowHtml (idx) {
+            return '<div class="d-flex align-items-center mt-2" style="gap: 8px;">'
+                + '<button type="button" class="btn btn-sm btn-primary play-game-btn" data-guest-index="' + idx + '">Play Game</button>'
+                + '</div>'
+        }
+
+        function showResults (data) {
+            currentGuests = []
+            currentRegistrationId = data.slug
+            currentQrData = data
+
+            var html = ''
+
+            html += '<div class="status-row">'
+                + '<div>'
+                + '<div class="person-label">' + data.fname + ' ' + data.lname + '</div>'
+                + '<div class="person-slug">' + data.slug + '</div>'
+                + '</div>'
+                + '<span class="badge-complete">Registrant</span>'
+                + '</div>'
+            html += playGameRowHtml(0)
+            currentGuests.push({ fname: data.fname, lname: data.lname })
+
+            var minors = data.minors || []
+            minors.forEach(function (minor, i) {
+                html += '<div class="status-row">'
+                    + '<div>'
+                    + '<div class="person-label">' + minor.fname + ' ' + minor.lname + '</div>'
+                    + '</div>'
+                    + '<span class="badge-waiting">Minor</span>'
+                    + '</div>'
+                html += playGameRowHtml(i + 1)
+                currentGuests.push(minor)
+            })
+
+            $('#results-list').html(html)
+            $('#scanner-section').hide()
+            $('#error-card').hide()
+            $('#game-in-progress').hide()
+            $('#results-card').show()
+        }
+
+        function showError (msg) {
+            $('#error-message').text(msg)
+            $('#scanner-section').hide()
+            $('#results-card').hide()
+            $('#game-in-progress').hide()
+            $('#error-card').show()
+        }
+
+        function showGameInProgress () {
+            $('#scanner-section').hide()
+            $('#results-card').hide()
+            $('#error-card').hide()
+            $('#game-in-progress').show()
+        }
+
+        var currentPlayingGuest = null
+
+        $(document).on('click', '.play-game-btn', function () {
+            var idx = $(this).data('guest-index')
+            console.log('[play-game debug] idx=' + JSON.stringify(idx) + ' typeof idx=' + (typeof idx) + ' currentGuests=' + JSON.stringify(currentGuests) + ' currentRegistrationId=' + JSON.stringify(currentRegistrationId))
+            currentPlayingGuest = Object.assign({}, currentGuests[idx], { userid: currentRegistrationId })
+
+            console.log('startGame: ' + JSON.stringify(currentPlayingGuest))
+            socket.emit('startGame')
+            showGameInProgress()
+        })
+
+        socket.on('endGame', function (data) {
+            console.log('endGame: ' + JSON.stringify(data))
+            var guest = currentPlayingGuest
+            $.ajax({
+                url: '/insertscore',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ firstName: guest.fname, lastName: guest.lname, score: data.score }),
+                error: function (err) {
+                    console.error(err)
+                }
+            })
+
+            $('#game-in-progress').hide()
+            $('#results-card').show()
+        })
+
+        function handleScan (raw) {
+            lastScannedText = raw
+            decryptQrPayload(raw).then(function (payload) {
+                showResults(payload)
+            }).catch(function (err) {
+                console.error(err)
+                showError('QR code could not be read. Please ask the attendee to show their confirmation screen or re-register.')
+            })
+        }
+
+        function restartScanner () {
+            lastScannedText = null
+            $('#results-card').hide()
+            $('#error-card').hide()
+            $('#game-in-progress').hide()
+            $('#scanner-section').show()
+            $('#scan-status').text('Scanning...')
+            html5QrCode.start({ facingMode: 'environment' }, config, qrCodeSuccessCallback)
+        }
+
+        var qrCodeSuccessCallback = function (decodedText) {
+            new Audio('/expressassets/beep.wav').play()
+            html5QrCode.stop()
+                .then(function () { handleScan(decodedText) })
+                .catch(function () { handleScan(decodedText) })
+        }
+
+        $('#recheck-btn').on('click', function () { if (lastScannedText) handleScan(lastScannedText) })
+        $('#scan-again-btn').on('click', restartScanner)
+        $('#error-scan-again-btn').on('click', restartScanner)
+
+        html5QrCode.start({ facingMode: 'environment' }, config, qrCodeSuccessCallback)
+
+        // TEMP TEST — simulate a scan 3s after load. Remove before shipping.
+        setTimeout(function () {
+            qrCodeSuccessCallback('VZV0OJP5/lpPSJoaUWgcgnjK64Gze18C7Hqgopqx/BNSURAfBKbBXZ4bHN7HwQS7speBIS1lXk7/AahcLaHYK9SohlISoy1dkNzdoc64q9KlbwZ3ud5I3drnpK+01lzDkUHi5y+9JJ09kBJZ9Vr0n6aaE49O7ECQmG4qlqUdDqF++MjkTcsszK6uLAsofrpwKG6Oec09nb8VDj0wNh5qaA==')
+        }, 3000)
+    </script>
+</body>
+</html>
