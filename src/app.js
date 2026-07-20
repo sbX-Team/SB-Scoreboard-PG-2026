@@ -365,6 +365,10 @@ Object.keys(ifaces).forEach(function (ifname) {
   })
 })
 
+if (ip) {
+  $('#ipaddresses').append('Scanner: <a href="https://' + ip + ':5001/scanner">https://' + ip + ':5001/scanner</a><br/>')
+}
+
 $(document).on('click', 'a[href^="http"]', function (event) {
   event.preventDefault()
   shell.openExternal(this.href)
