@@ -62,7 +62,9 @@
       "Bash(curl -s -D - -o /dev/null http://localhost:5000/scanner)",
       "PowerShell(Get-NetTCPConnection -LocalPort 5001 -ErrorAction SilentlyContinue)",
       "Bash(powershell -NoProfile -Command 'Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -notlike '\\\\''169.254.*'\\\\'' -and $_.IPAddress -ne '\\\\''127.0.0.1'\\\\'' } | Select-Object IPAddress,InterfaceAlias | Format-Table -AutoSize')",
-      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('version:',j.version\\); console.log\\('main:',j.main\\)}\\)\")"
+      "Bash(node -e \"let d='';process.stdin.on\\('data',c=>d+=c\\).on\\('end',\\(\\)=>{const j=JSON.parse\\(d\\);console.log\\('version:',j.version\\); console.log\\('main:',j.main\\)}\\)\")",
+      "Bash(sort -k6,7)",
+      "Bash(powershell -NoProfile -Command \"Get-CimInstance Win32_Process -Filter \\\\\"Name='node.exe'\\\\\" | Select-Object ProcessId,CommandLine | Format-List\")"
     ]
   }
 }
