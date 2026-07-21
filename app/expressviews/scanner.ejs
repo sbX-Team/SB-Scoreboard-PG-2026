@@ -45,8 +45,7 @@
                 <h5 class="card-title">Users</h5>
                 <div id="results-list"></div>
                 <div class="d-flex mt-3" style="gap: 8px;">
-                    <button type="button" class="btn btn-primary flex-fill" id="recheck-btn">Re-check</button>
-                    <button type="button" class="btn btn-outline-secondary flex-fill" id="scan-again-btn">Scan Again</button>
+                    <button type="button" class="btn btn-primary flex-fill" id="scan-again-btn">Scan Again</button>
                 </div>
             </div>
         </div>
@@ -73,7 +72,6 @@
         var ip = window.location.host
         var socket = io(ip)
         var wasConnected = false
-        var lastScannedText = null
 
         socket.on('connect', function () {
             if (wasConnected) window.location.reload()
@@ -210,7 +208,6 @@
         })
 
         function handleScan (raw) {
-            lastScannedText = raw
             decryptQrPayload(raw).then(function (payload) {
                 showResults(payload)
             }).catch(function (err) {
@@ -220,7 +217,6 @@
         }
 
         function restartScanner () {
-            lastScannedText = null
             $('#results-card').hide()
             $('#error-card').hide()
             $('#game-in-progress').hide()
@@ -236,7 +232,6 @@
                 .catch(function () { handleScan(decodedText) })
         }
 
-        $('#recheck-btn').on('click', function () { if (lastScannedText) handleScan(lastScannedText) })
         $('#scan-again-btn').on('click', restartScanner)
         $('#error-scan-again-btn').on('click', restartScanner)
 
